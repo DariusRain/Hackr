@@ -1,23 +1,25 @@
 const express = require("express"),
   router = express.Router(),
-  userModel = require("../models/user"),
+  mongoose = require('mongoose'),
+  User = require("../models/user"),
+  Post = require("../models/post"),
   bcrypt = require("bcryptjs"),
   jwt = require("jsonwebtoken"),
   tokenMware = require("../middleware/jwt"),
-  SECRET_KEY = process.env.JWT_KEY;
+  SECRET_KEY = process.env.JWT_SEC;
 
 
   router.use(express.static('public'))
 
 
-router.get("/", tokenMware.checkToken, async (req, res) => {
+router.get("/", async (req, res) => {
   console.log("On user route");
   res.send("On root.");
 });
 
 router.post("/signup", async (req, res) => {
   console.log(req.body);
-  const newUser = new userModel({
+  const newUser = new User({
     username: `${req.body.username}`,
     password: bcrypt.hashSync(req.body.password),
     data: req.body.data
@@ -26,14 +28,14 @@ router.post("/signup", async (req, res) => {
   try {
 
     const savedUser = await newUser.save();
-    const experation = 20 * 60 * 60;
-    const accessToken = jwt.sign({ id: newUser._id }, SECRET_KEY, {
-      expiresIn: experation
-    });
+    // const experation = 20 * 60 * 60;
+    // const accessToken = jwt.sign({ id: newUser._id }, SECRET_KEY, {
+    //   expiresIn: experation
+    // });
     res.json({
-      user: savedUser,
-      access_token: accessToken,
-      expiresIn: experation
+      user: savedUser
+      // access_token: accessToken,
+      // expiresIn: experation
     });
   } catch (err) {
     console.log(err);
@@ -45,7 +47,7 @@ router.post("/signup", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-    const loginRequest = await userModel.findOne({username: req.body.username});
+    const loginRequest = await User.findOne({username: req.body.username});
     
   try {
     const authenticate = await bcrypt.compare(req.body.password, loginRequest.password);
@@ -65,7 +67,7 @@ router.post("/login", async (req, res) => {
 
 router.get('/profile/:id',  async (req, res) => {
     console.log('On Profile')
-     await userModel.findOne({_id: req.params.id}).then(result => {
+     await User.findOne({_id: req.params.id}).then(result => {
         console.log(5, result)
         res.render('user', {
             data: result
@@ -75,9 +77,37 @@ router.get('/profile/:id',  async (req, res) => {
             message: 'Internal Server Error!'
         })
     })
-    
+})
 
 
+router.post('/post-it', async (req, res) => {
+  const newPost = new Post({
+    avatar: req.body.avatar,
+    username: req.body.username,
+    uid: req.body.uid,
+    post: req.body.post
+  });
 
+  try {
+    const savedPost = newPost.save();
+      res.json(savedPost)
+  }
+  catch (err) {
+    res.json(err)
+    console.log(err)
+  }
+})
+
+router.get('/profile/:uid/:username/live', async (req, res) => {
+  if(await mongoose.isValidObjectId(req.params.uid) === true){
+    await Post.find().then(result => {
+      return res.status(200).json({feed: result})
+    })
+    .catch(err => {
+      return res.status(500).json({message: err})
+    })
+  }else {
+    return res.status(404).json({message: "Invalid ID and or Username"})
+  }
 })
 module.exports = router;

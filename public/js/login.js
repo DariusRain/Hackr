@@ -67,30 +67,6 @@ async function signUp() {
 
 async function login() {
   event.preventDefault();
-//   (async () => {
-//     try {
-//       const rawResponse = await fetch("http://localhost:5000/user/login", {
-//         method: "post",
-//         headers: {
-//           "Content-Type": "application/json"
-//         },
-//         body: JSON.stringify({
-//           username: input.github_username.value.toString(),
-//           password: input.login_password.value.toString()
-//         })
-//       });
-
-//       const content = await rawResponse.json();
-//       if (content.message) {
-//         alert(content.message);
-//         return;
-//       }
-//       console.log(content);
-//     } catch (err) {
-    
-//     }
-//   })();
-
     const status = await fetch("http://localhost:5000/user/login", {
         method: "POST",
         headers: {

@@ -5,9 +5,11 @@ head
   meta(http-equiv='X-UA-Compatible', content='ie=edge')
   title &#x1F468;&zwj;&#x1F4BB;Hackr
   style.
-    * { "font-family: font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;"}
-    a { padding: 5px;font-size: 18px}  
-body(style="margin: 0; background-color: #dee2e2" align="center")
+    * { "font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;"}
+    a { padding: 5px; font-size: 18px; text-decoration: none;}
+    button {font-size: 20px;}
+
+body(style="margin: 0; background-color: #dee2e2; overflow-x:hidden;" align="center")
   header(style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;")
     #heading-div
       h1(style=" margin: 0; background-color: #7cff85; text-align: center; padding: 12px; box-shadow: 0px 2px 12px;") &#x1F468;&zwj;&#x1F4BB;Hackr
@@ -23,6 +25,7 @@ body(style="margin: 0; background-color: #dee2e2" align="center")
     - const repos = data._doc.data.public_repos;
     - const linkTo = `https://www.github.com/${username}`;  
     p( id="url" style="display: none") #{reposUrl}
+    p(id="data" style="display:none") #{JSON.stringify(data)}
     p #{repoz}
 
 div(style="display: flex; flexwrap: nowrap; flex-direction: column; justify-content: spaced; width: 100%; height:100%; float:left;" )
@@ -33,10 +36,8 @@ div(style="display: flex; flexwrap: nowrap; flex-direction: column; justify-cont
         br
         strong(style="color: orangered;") Currently working on settingup 0auth!
         p(style="color:white;") Working on setting up 0auth for git & linkedin
-        textarea(type="textarea" style="font-weight: bold; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; " )
-        br
-        button(style="margin: 4px; border-radius:4px; font-size: 16px") Post
-    div( id="profile_div" style="display: flex; flexwrap: nowrap; flex-direction: column;  width: 100%; overflow-y: auto; border-style: solid; border-color: #dee2e2; border-top-color: black; border-bottom-color: black" align="center")
+        
+    div( id="profile_div", style="display: flex; flexwrap: nowrap; flex-direction: column;  width: 100%; overflow-y: auto; border-style: solid; border-color: #dee2e2; border-top-color: black; border-bottom-color: black" align="center")
       div
         img(src="https://s3.us-east-2.amazonaws.com/upload-icon/uploads/icons/png/10412341841540553610-256.png" width="65px" style="padding-left: 12px; margin-top: 20px;")      
         hr(style="width: 99%")
@@ -51,16 +52,25 @@ div(style="display: flex; flexwrap: nowrap; flex-direction: column; justify-cont
       div
           div(id="all_repos" style="background-color: #7cff85; text-align: center;")
             h2 Repositories Found: #{repos}
-
+div(id="feed", style="width: 100%; height:100%;" align="center")
+  textarea(id="post_text", type="textarea", style="background-color: black; color:white; opacity: 0.7; font-weight: bold; border-bottom-right-radius: 12px; width: 50%; border-bottom-left-radius: 12px;font-size:30px; text-align:center; margin: 0 auto;")
+  br
+  button(id="invoke_post", style="background-color: #7cff85; border-radius:4px; width: 25%; margin: 0 auto; font-size: 16px") Post
    
-    script.
+script.
           let reposUrl = document.getElementById("url").innerText
           let show_profile = document.getElementById("show_profile")
           let profile = document.getElementById("profile_div")
           let show_headline = document.getElementById("show_headlines");
-          let headline = document.getElementById("headline")
+          let headline = document.getElementById("headline");
+          let feed_div = document.getElementById("feed");
+          let invoke_post = document.getElementById("invoke_post");
+          let post_text = document.getElementById("post_text").value
+          const data = JSON.parse(document.getElementById("data").innerText);
           show_headline.addEventListener('click', showHeadline);
           show_profile.addEventListener('click', showProfile);
+
+          invoke_post.addEventListener('click', createPost);
           console.log(profile)
           function showProfile() {
             if(profile.style.display === 'none'){
@@ -82,6 +92,7 @@ div(style="display: flex; flexwrap: nowrap; flex-direction: column; justify-cont
             }
            
           }
+
           let all_repos_div = document.getElementById("all_repos");
           repos = async () =>{
             await fetch(reposUrl)
@@ -94,18 +105,125 @@ div(style="display: flex; flexwrap: nowrap; flex-direction: column; justify-cont
           repos()
           let count = 0;
           setTimeout(() => {
-          
+          console.log(val)
             val.forEach(element => {
               let anchor = document.createElement("a");
-              anchor.style.padding = "10px;"
+              anchor.style.fontSize = "30px";
               anchor.style.fontWeight = "bold";
-              anchor.style.textDecoration = "none"
-              let breakz = document.createElement("br")
+              anchor.style.color = "black"
+              anchor.style.textDecoration = "none";
+              let breakz = document.createElement("p")
+              breakz.style.padding = "50px"
               anchor.innerText = `(${++count}) ${element.name}`;
               anchor.setAttribute("href", element.html_url)
               all_repos_div.appendChild(anchor)
               all_repos_div.appendChild(breakz)
+              all_repos_div.appendChild(breakz)
+              
             })
           }, 1000)
-        
-          //const data = fetch()
+          console.log(1, data)
+          
+          console.log(`${window.location}/${data.username}/live`)
+           feed = async () =>{
+            await fetch(`${window.location}/${data.username}/live`)
+              .then(result => result.json())
+              .then(result => { 
+                feedObject = result
+                return result
+                })
+              .catch(err => console.log(0, err))
+          }
+          feed()
+          setTimeout(() => {
+            console.log(feedObject.feed)
+
+           feedObject.feed.reverse().forEach(element => {
+              let div = document.createElement("div");
+              let profile_name_div = document.createElement("div")
+              let message_div = document.createElement("div")
+              let thumbs_div = document.createElement("div")
+              let h3 = document.createElement("pre");
+              let img = document.createElement("img");
+              let kbd = document.createElement("pre");
+              let upVote = document.createElement("a")
+              let downVote = document.createElement("a")
+              let breakSt = document.createElement("br")
+              let lineBreak = document.createElement("hr")
+              message_div.style.height = "100%"
+              thumbs_div.style.height = "100%"
+              thumbs_div.style.float = "left"
+              profile_name_div.style.height = "100%"
+              div.style.overflow = "auto"
+              div.style.margin = "13px";
+              img.style.float = "left";
+              h3.style.float = "left";
+              img.style.width = "70px";
+              img.style.borderRadius = "12px"
+              div.style.height = "90px"
+              lineBreak.style.color = "white"
+              h3.style.fontSize = "25px"
+              div.style.height = "100%"
+              kbd.style.fontSize = "18px"
+              downVote.style.color = "white"
+              upVote.style.color = "white"
+              downVote.style.fontSize = "40px"
+              upVote.style.fontSize = "40px"
+              div.style.paddingColor = "white;"
+              div.style.display = "flex";
+              div.style.flexDirection = "column"
+              div.style.flexWrap = "wrap"
+              div.style.padding = "12px"
+              div.style.color = "white";
+              div.style.width = "50%"
+              div.style.backgroundColor = "black";
+              div.style.opacity = "0.7";
+              div.style.borderRadius = "12px";
+              kbd.style.color = "black !important"
+              upVote.innerText = "0 👍";
+              downVote.innerText = "👎 0";
+              upVote.setAttribute("href", `http://localhost:5000/user/${element._id}/upvote`)
+              downVote.setAttribute("href", `http://localhost:5000/user/${element._id}/downvote`)
+              img.setAttribute("src", element.avatar);
+              h3.innerText = `   ${element.username}`;
+              kbd.innerText = element.post;
+              profile_name_div.appendChild(img)
+              profile_name_div.appendChild(breakSt)
+              message_div.appendChild(kbd)
+              message_div.appendChild(breakSt)              
+              profile_name_div.appendChild(h3)
+              thumbs_div.appendChild(lineBreak)
+              thumbs_div.appendChild(upVote)
+              thumbs_div.appendChild(downVote)
+              div.appendChild(profile_name_div);
+              div.appendChild(message_div);
+              div.appendChild(thumbs_div);              
+              feed_div.appendChild(div)
+              feed_div.appendChild(breakSt)
+            })
+          }, 2000)
+
+      async function createPost() {
+        event.preventDefault();
+        await fetch("http://localhost:5000/user/post-it", 
+        {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+            "content-type": "application/json"
+        },
+        body: JSON.stringify({
+          avatar: data.data.avatar_url.toString(),
+          username: data.username.toString(),
+          uid: data._id.toString(),
+          post: post_text.toString()
+          })
+        })
+        .then(result => {
+        return result;
+        })
+        .catch(err => {
+        return err;
+        })
+      }
+      
