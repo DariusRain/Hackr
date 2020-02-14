@@ -1,71 +1,75 @@
 const express = require("express"),
   router = express.Router(),
-  userModel = require("../models/user"),
+  User = require("../models/user"),
   bcrypt = require("bcryptjs"),
   jwt = require("jsonwebtoken"),
-  tokenMware = require("../middleware/jwt"),
-  SECRET_KEY = process.env.JWT_KEY;
+  tokdenMware = require("./middleware/jwt");
 
 
-  router.use(express.static('public'))
+  const { registerValidation, loiginValidation } = require("../validation");
 
 
-router.get("/", tokenMware.checkToken, async (req, res) => {
+router.get("/", async (req, res) => {
   console.log("On user route");
   res.send("On root.");
 });
 
 router.post("/signup", async (req, res) => {
-  console.log(req.body);
-  const newUser = new userModel({
-    username: `${req.body.username}`,
-    password: bcrypt.hashSync(req.body.password),
-    data: req.body.data
-    });
+  const { error } = registerValidation(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
+  const userExists = await User.findOne({ username: req.body.username });
+  if (userExists) return res.status(400).send("Username Exists");
+
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(req.body.password, salt);
+  
+  const user = new User({
+    username: req.body.username,
+    password: hashedPassword
+  });
+  
   try {
-
-    const savedUser = await newUser.save();
-    const experation = 20 * 60 * 60;
-    const accessToken = jwt.sign({ id: newUser._id }, SECRET_KEY, {
-      expiresIn: experation
-    });
-    res.json({
-      user: savedUser,
-      access_token: accessToken,
-      expiresIn: experation
-    });
+    const savedUser = await user.save();
+    console.log(savedUser)
+    res.status(201).send({user: user._id}); //Resolved
   } catch (err) {
-    console.log(err);
-    res.send(err);
+    res.status(401).send(err); //Rejected
   }
-
-
-    res.json({message: 'Invalid Github Username'})
 });
 
 router.post("/login", async (req, res) => {
-    const loginRequest = await userModel.findOne({username: req.body.username});
-    
-  try {
-    const authenticate = await bcrypt.compare(req.body.password, loginRequest.password);
-      if(loginRequest && authenticate){
-        const id = loginRequest._id
-        console.log(id)
-        res.json({
-         id: loginRequest._id
-        })
-      }
-  }
-  catch(err){
-           //res.json({message: err})
-           console.log(0)
-  }
+    //Use the login validation Joi schema from the validation.js file
+    const { error } = loiginValidation(req.body);
+    if (error) return res.status(400).json({message: error.details[0].message});
+
+    //Check if email is a email registered
+    const user = await User.findOne({ username: req.body.username });
+    if (!user) return res.status(400).json({message: "Ivalid Username and or Password"});  
+
+    try{
+    //Validate password with bcrypt.compare
+    const validPassword = await bcrypt.compare(req.body.password, user.password)
+    if(!validPassword) return res.status(400).json({message: "Invalid Username and or Password"})
+
+    const token = jwt.sign({_id: user._id}, process.env.JWT_PASS)
+    return res.header('auth-token', token).json(token)
+
+    }
+    catch (err) {
+      console.log(err)
+    }
+
+    //Create and assin a token
+    //Takes two arguments an object and a token secret
+ 
+   // res.send('Logged in!')
+
 })
 
-router.get('/profile/:id',  async (req, res) => {
+router.get('/profile/:id', tokenMware, async (req, res) => {
     console.log('On Profile')
-     await userModel.findOne({_id: req.params.id}).then(result => {
+     await User.findOne({_id: req.params.id}).then(result => {
         console.log(5, result)
         res.render('user', {
             data: result

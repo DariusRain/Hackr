@@ -1,46 +1,231 @@
 doctype html
 head
   meta(charset='UTF-8')
-  meta(name='viewport', content='width=device-width, initial-scale=1.0')
-  meta(http-equiv='X-UA-Compatible', content='ie=edge')
-  link(rel='stylesheet', type='text/css', href='./css/login.css')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  meta(http-equiv='X-UA-Compatible' content='ie=edge')
   title &#x1F468;&zwj;&#x1F4BB;Hackr
-header
-  #heading-div
-    h1 &#x1F468;&zwj;&#x1F4BB;Hackr
-.login-box(align='center')
-  form#form_login
-    h4 Login
-    label Username
-    br
-    input(type='text', placeholder='myname123', name='github_username', required='true')
-    br
-    br
-    label Password
-    br
-    input(type='password', placeholder='password', name='login_password', required='true')
-    hr
-    button#login(type='submit') Login
-    br
-  form#form_signup
-    h4 Sign-up
-    label Github Username:
-    br
-    input(type='text', placeholder='myname123', name='github_signup', required='true')
-    br
-    br
-    label Password
-    br
-    input(type='password', placeholder='password', name='password1_signup', required='true')
-    br
-    br
-    label Password Again
-    br
-    input(type='password', placeholder='password', name='password2_signup', required='true')
-    hr
-    button#signup(type='submit') Sign Up
-.all-users
-script(src='./js/login.js')
-footer
+  style. 
+    *{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    #login-box {
+      background-color:  #7e96ff;
+
+    }
+
+    #signup-box {
+      background-color:  #7e96ff;
+
+    }
+
+    body {
+      background-color:  #dee2e2;
+      margin: 0;
+    }
+    hr {
+      color:white;
+      width: 100%;
+    }
+    header {
+      box-shadow: 0px 4px 10px;
+      background-color:  #7e96ff;      
+    }
+    input {
+      border-radius: 8px;
+      border-style: solid;
+      border-color: ivory;
+      text-align: center;
+    }
+    #login {
+      background-color:  #7e96ff;
+      border-style: solid;
+      border-radius: 3px;
+      border-color: black;
+    } 
+    #login:hover {
+      background-color: orange;
+      border-style: solid; 
+    }
+    #signup {
+      background-color:  #7e96ff;
+      border-style: solid;
+      border-radius: 3px;
+      border-color: black;
+      display: none;
+      height: 100%;
+    }
+    #signup:hover {
+      background-color: orange;
+      border-style: solid;
+    }
+
+    #form_login{
+      margin: 60px;
+      position: relative;
+      background-color:  #7e96ff;
+      border-radius: 12px;
+      width: 50%;
+    }
+    #form_signup{
+
+      margin: 60px;
+      background-color:  #7e96ff;
+      border-radius: 12px;
+      width: 50%;
+    }
+
+    h4 {
+      background-color:   #7cff85  ;
+    }
+    h1 {
+      margin: 0;
+      background-color:   #7cff85  ;
+      text-align: center;
+    }
+    div#footerz {
+      text-align: center;    
+    }
+    html {
+      height: 100%;
+    }
+body
+  header
+    #heading-div
+      h1 &#x1F468;&zwj;&#x1F4BB;Hackr
+  .login-box(align='center')
+    form#form_login
+      h4 Login
+      label Username
+      br
+      input(type='text' placeholder='myname123' name='github_username' required='true')
+      br
+      br
+      label Password
+      br
+      input(type='password' placeholder='password' name='login_password' required='true')
+      hr
+      button#login(type='submit') Login
+      br
+    form#form_signup
+      h4 Sign-up
+      label Github Username:
+      br
+      input(type='text' placeholder='myname123' name='github_signup' required='true')
+      br
+      br
+      label Password
+      br
+      input(type='password' placeholder='password' name='password1_signup' required='true')
+      br
+      br
+      label Password Again
+      br
+      input(type='password' placeholder='password' name='password2_signup' required='true')
+      hr
+      button#signup(type='submit') Sign Up
+  .all-users
+
+  script. 
+
+    const input = document.getElementsByTagName("input");
+    // const form_login = document.getElementById('form_login');
+    input[input.length - 1].style.display = "none";
+    input[
+      input.length - 1
+    ].previousElementSibling.previousElementSibling.style.display = "none";
+
+    ////////////////////Login~sign-up//////////////////////
+    const form_signup = document.getElementById("form_signup"),
+      form_login = document.getElementById("form_login");
+
+    const button_signup = document.getElementById("signup"),
+      button_login = document.getElementById("login");
+
+    input.password1_signup.addEventListener("keypress", password_again);
+    form_signup.addEventListener("submit", signUp);
+    form_login.addEventListener("submit", login);
+
+    ////////////////Functions///////////////////
+    async function gitCheck(user) {
+      const response = await fetch(`https://api.github.com/users/${user}`)
+        .then(result => result.json())
+        .then(result => {
+          if (!result.message) {
+            return result;
+          } else {
+            alert("Must include github");
+            return false;
+          }
+        });
+      console.log(response);
+      return response;
+    }
+
+    async function signUp() {
+      event.preventDefault();
+      console.log(input.github_signup.value.toString())
+      const gitStatus = await gitCheck(input.github_signup.value).then(result => {
+        return result;
+      })
+        if (gitStatus) {
+          await fetch("http://localhost:5000/user/signup", {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              username: input.github_signup.value.toString(),
+              password: input.password1_signup.value.toString(),
+            })
+          }).then(result => {
+            return result.json()
+          })
+            .then(result => {
+              console.log(result)
+              return result
+            })
+            .catch(err => {
+              return err
+            });
+        }
+    }
+
+    async function login() {
+      event.preventDefault();
+      const gitStatus = true;
+        if (gitStatus) {
+          await fetch("http://localhost:5000/user/login", {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              username: input.github_username.value.toString(),
+              password: input.login_password.value.toString(),
+            })
+          }).then(result => {
+            return result.json()
+          })
+            .then(result => {
+              console.log(result)
+              return result
+            })
+            .catch(err => {
+              return err
+            });
+        }
+    }
+
+
+    function password_again() {
+      input[input.length - 1].style.display = "block";
+      input[input.length - 1].previousElementSibling.previousElementSibling.style.display = "inline";
+      button_signup.style.display = "block";
+    }
+
+  footer
   #footerz
     | &#x1F468;&zwj;&#x1F4BB;Hackr 2020&copy;
