@@ -3,26 +3,37 @@ const express = require("express"),
   mongoose = require("mongoose"),
   cors = require("cors"),
   path = require('path'),
+  auth = require('./routes/auth'),
+  passport = require('passport'),
+  cookieSession = require('cookie-session'),
+  passportSetup = require('./config/passport-setup'),
   volleyball = require('volleyball');
 const server = express();
 const home = require("./routes/home");
 const user = require("./routes/user");
 
-const corsOptions = {
-  origin: '*',
-  credentials: true 
-};
-
 
 server.set('view engine', 'pug');
 server.set('views', path.join(__dirname, 'views'))
-server.use(cors(corsOptions))
+
+//Cookie session
+server.use(cookieSession({
+  maxAge: 24 * 60 * 60 * 10000,
+  keys: [process.env.COOKIE_KEY]
+}))
+
+//Initialize passport
+server.use(passport.initialize())
+server.use(passport.session())
+
+
+server.use(cors())
 server.use(express.json());
 server.use(express.urlencoded({extended: false}))
 server.use(volleyball)
 server.use("/", home);
 server.use("/user", user);
-
+server.use('/auth', auth)
 mongoose.connect(
   "mongodb://localhost:27017/homework-febuary",
   { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },

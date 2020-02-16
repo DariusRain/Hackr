@@ -1,111 +1,11 @@
-doctype html
-head
-  meta(charset='UTF-8')
-  meta(name='viewport', content='width=device-width, initial-scale=1.0')
-  meta(http-equiv='X-UA-Compatible', content='ie=edge')
-  title &#x1F468;&zwj;&#x1F4BB;Hackr
-  style.
-    * { "font-family: font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;"}
-    a { padding: 5px;font-size: 18px}  
-body(style="margin: 0; background-color: #dee2e2" align="center")
-  header(style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;")
-    #heading-div
-      h1(style=" margin: 0; background-color: #7cff85; text-align: center; padding: 12px; box-shadow: 0px 2px 12px;") &#x1F468;&zwj;&#x1F4BB;Hackr
-      nav(style="display: flex; flex-direction: row; ")
-        button(id="show_profile") Profile
-        button(id="show_headlines") Headlines
-        button(id="show_wall") Live Feed 
-        button(id="log_out") Logout
-    - const avatar = data._doc.data.avatar_url
-    - const bio = data._doc.data.bio
-    - const reposUrl = data._doc.data.repos_url;
-    - const username = data._doc.data.login
-    - const repos = data._doc.data.public_repos;
-    - const linkTo = `https://www.github.com/${username}`;  
-    p( id="url" style="display: none") #{reposUrl}
-    p #{repoz}
+extends index.pug
 
-div(style="display: flex; flexwrap: nowrap; flex-direction: column; justify-content: spaced; width: 100%; height:100%; float:left;" )
-    div(id="headline" style="display: flex; flexwrap: nowrap; flex-direction: column; width: 100%; height:100%;" )
-      div(style="background-color: black; width: 100%; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; opacity: 0.7;" align="center")
-        h1(style="color: white;  ") Welecome to Hackr v0.0.1
-        p(style="color:white;") Connect linkedin or github and start a conversation with other fellow hackrs
-        br
-        strong(style="color: orangered;") Currently working on settingup 0auth!
-        p(style="color:white;") Working on setting up 0auth for git & linkedin
-        textarea(type="textarea" style="font-weight: bold; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; " )
-        br
-        button(style="margin: 4px; border-radius:4px; font-size: 16px") Post
-    div( id="profile_div" style="display: flex; flexwrap: nowrap; flex-direction: column;  width: 100%; overflow-y: auto; border-style: solid; border-color: #dee2e2; border-top-color: black; border-bottom-color: black" align="center")
-      div
-        img(src="https://s3.us-east-2.amazonaws.com/upload-icon/uploads/icons/png/10412341841540553610-256.png" width="65px" style="padding-left: 12px; margin-top: 20px;")      
-        hr(style="width: 99%")
-        br
-        img(src="" + avatar width="150px" style="border-radius: 12px; border-style: solid;")
-        h1 #{username}       
-      div(style="padding: 10px;")
 
-        h2 Bio
-    
-        p(style="width: 250px; font-style: bold-italic; font-size: 24px;") #{bio}
-      div
-          div(id="all_repos" style="background-color: #7cff85; text-align: center;")
-            h2 Repositories Found: #{repos}
+block content
+  h1 on profile #{data.user}
+  h2 content #{data.data}
 
-   
-    script.
-          let reposUrl = document.getElementById("url").innerText
-          let show_profile = document.getElementById("show_profile")
-          let profile = document.getElementById("profile_div")
-          let show_headline = document.getElementById("show_headlines");
-          let headline = document.getElementById("headline")
-          show_headline.addEventListener('click', showHeadline);
-          show_profile.addEventListener('click', showProfile);
-          console.log(profile)
-          function showProfile() {
-            if(profile.style.display === 'none'){
-              
-            return profile.style.display = 'block'
-              
-            }else {
-              return profile_div.style.display = 'none'
-            }
-           
-          }
-           function showHeadline() {
-            if(headline.style.display === 'none'){
-              
-            return headline.style.display = 'block'
-              
-            }else {
-              return headline.style.display = 'none'
-            }
-           
-          }
-          let all_repos_div = document.getElementById("all_repos");
-          repos = async () =>{
-            await fetch(reposUrl)
-              .then(result => result.json())
-              .then(result => { 
-                val = result
-                })
-              .catch(err => console.log(0, err))
-          }
-          repos()
-          let count = 0;
-          setTimeout(() => {
-          
-            val.forEach(element => {
-              let anchor = document.createElement("a");
-              anchor.style.padding = "10px;"
-              anchor.style.fontWeight = "bold";
-              anchor.style.textDecoration = "none"
-              let breakz = document.createElement("br")
-              anchor.innerText = `(${++count}) ${element.name}`;
-              anchor.setAttribute("href", element.html_url)
-              all_repos_div.appendChild(anchor)
-              all_repos_div.appendChild(breakz)
-            })
-          }, 1000)
-        
-          //const data = fetch()
+
+
+
+  
