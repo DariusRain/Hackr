@@ -5,7 +5,8 @@ const jwt = require('jsonwebtoken');
 module.exports = (req, res, next) => {
 
    //Check the clients auth-header property from the request
-   const token = req.header('auth-token');
+   const token = req.header('Authorization').split(' ')[1];
+   console.log(1, token)
    //If that token dosent exist at all then deny access
    if(!token) return res.status(401).send('Access Denied!')
 

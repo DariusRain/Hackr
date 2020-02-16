@@ -135,6 +135,16 @@ body
       input.length - 1
     ].previousElementSibling.previousElementSibling.style.display = "none";
 
+
+
+
+
+
+
+
+
+
+
     ////////////////////Login~sign-up//////////////////////
     const form_signup = document.getElementById("form_signup"),
       form_login = document.getElementById("form_login");
@@ -145,6 +155,16 @@ body
     input.password1_signup.addEventListener("keypress", password_again);
     form_signup.addEventListener("submit", signUp);
     form_login.addEventListener("submit", login);
+
+  
+
+
+
+
+
+
+
+
 
     ////////////////Functions///////////////////
     async function gitCheck(user) {
@@ -158,9 +178,18 @@ body
             return false;
           }
         });
-      console.log(response);
-      return response;
+      //Show git user
+     // console.log(response);
+    return response;
     }
+
+
+
+
+
+
+
+
 
     async function signUp() {
       event.preventDefault();
@@ -178,17 +207,19 @@ body
             body: JSON.stringify({
               username: input.github_signup.value.toString(),
               password: input.password1_signup.value.toString(),
+              data: gitStatus
             })
           }).then(result => {
             return result.json()
           })
             .then(result => {
-              console.log(result)
-              return result
+                return result      
             })
             .catch(err => {
               return err
             });
+        } else {
+         return alert("Must include github username.")
         }
     }
 
@@ -209,17 +240,39 @@ body
           }).then(result => {
             return result.json()
           })
-            .then(result => {
-              console.log(result)
-              return result
+            .then( result => { 
+              token = result.token
+              id = result.id
+              return;
             })
             .catch(err => {
               return err
             });
         }
+        if(token && id) {
+          redirect()
+        }
     }
-
-
+  
+    async function redirect() {
+      const myHeaders = new Headers({
+        Accept: 'application/json',
+        'content-type': 'application/json',
+        Authorization: `Bearer ${token}`
+      });
+      
+      const myRequest = new Request(`http://localhost:5000/user/profile/${id}`, {
+        method: 'GET',
+        headers: myHeaders,
+        mode: 'cors',
+        cache: 'default'
+      });
+      await fetch(myRequest).then(response => { return response.text()}).then(response =>{ 
+        
+        })
+        
+      
+    }
     function password_again() {
       input[input.length - 1].style.display = "block";
       input[input.length - 1].previousElementSibling.previousElementSibling.style.display = "inline";

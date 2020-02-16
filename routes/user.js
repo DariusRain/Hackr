@@ -3,10 +3,11 @@ const express = require("express"),
   User = require("../models/user"),
   bcrypt = require("bcryptjs"),
   jwt = require("jsonwebtoken"),
-  tokdenMware = require("./middleware/jwt");
+  tokenMware = require("./middleware/jwt");
 
-
+  
   const { registerValidation, loiginValidation } = require("../validation");
+
 
 
 router.get("/", async (req, res) => {
@@ -14,8 +15,13 @@ router.get("/", async (req, res) => {
   res.send("On root.");
 });
 
+
+
 router.post("/signup", async (req, res) => {
-  const { error } = registerValidation(req.body);
+  const { error } = registerValidation({
+    username: req.body.username,
+    password: req.body.password
+  });
   if (error) return res.status(400).send(error.details[0].message);
 
   const userExists = await User.findOne({ username: req.body.username });
@@ -26,7 +32,8 @@ router.post("/signup", async (req, res) => {
   
   const user = new User({
     username: req.body.username,
-    password: hashedPassword
+    password: hashedPassword,
+    data: req.body.data
   });
   
   try {
@@ -38,7 +45,9 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-router.post("/login", async (req, res) => {
+
+
+router.post("/login", async (req, res, next) => {
     //Use the login validation Joi schema from the validation.js file
     const { error } = loiginValidation(req.body);
     if (error) return res.status(400).json({message: error.details[0].message});
@@ -47,15 +56,13 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne({ username: req.body.username });
     if (!user) return res.status(400).json({message: "Ivalid Username and or Password"});  
 
-    try{
-    //Validate password with bcrypt.compare
     const validPassword = await bcrypt.compare(req.body.password, user.password)
     if(!validPassword) return res.status(400).json({message: "Invalid Username and or Password"})
-
+    try{
+    //Validate password with bcrypt.compare
     const token = jwt.sign({_id: user._id}, process.env.JWT_PASS)
-    return res.header('auth-token', token).json(token)
-
-    }
+    res.status(201).header('Authorization', `Bearer ${token}`).json({data: user, id: user._id, token})
+  }
     catch (err) {
       console.log(err)
     }
@@ -67,13 +74,15 @@ router.post("/login", async (req, res) => {
 
 })
 
+
 router.get('/profile/:id', tokenMware, async (req, res) => {
     console.log('On Profile')
      await User.findOne({_id: req.params.id}).then(result => {
         console.log(5, result)
-        res.render('user', {
-            data: result
-        })
+        res.set('Content-Type', 'text/html').render('user', {
+          data: result
+      }) 
+
     }).catch(err => {
      return res.status(500).json({
             message: 'Internal Server Error!'

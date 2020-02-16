@@ -1,20 +1,25 @@
 //index.js (NEW)
 const express = require("express"),
   mongoose = require("mongoose"),
-  pug = require('pug'),
   cors = require("cors"),
-  path = require('path')
+  path = require('path'),
+  volleyball = require('volleyball');
 const server = express();
-
 const home = require("./routes/home");
 const user = require("./routes/user");
 
-server.use(express.static('public'))
-server.set('view engine', 'pug');
-server.set('views')
-server.use(cors())
-server.use(express.json());
+const corsOptions = {
+  origin: '*',
+  credentials: true 
+};
 
+
+server.set('view engine', 'pug');
+server.set('views', path.join(__dirname, 'views'))
+server.use(cors(corsOptions))
+server.use(express.json());
+server.use(express.urlencoded({extended: false}))
+server.use(volleyball)
 server.use("/", home);
 server.use("/user", user);
 
