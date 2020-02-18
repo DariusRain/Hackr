@@ -1,11 +1,238 @@
 extends index.pug
+block head
+  style. 
+    .container-row {font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;display: flex; flex-direction:column; padding:20px; width:88%; flex-wrap: wrap; margin:0 auto; padding-top: 20px; border-radius: 12px;}
+    .container-row-buttons {font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction:row; flex-wrap: wrap;  margin: 0 auto;}    
+    .container-column {font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column}
+    .container-item-1 {font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #98B4D4; text-align: center; width: 100%;}
+    .buttons {padding: 8px; background-color:#98B4D4; border-color: #98B4D4 ; border-style:solid; border-top-color: black; border-bottom-right-radius:15px; margin-right: 5px; border-bottom-left-radius:15px; box-shadow: 0px 2px 6px;  font-size: 20px; font-weight: bold;}
+    .buttons-post {padding: 8px; background-color:#7cff85; border-color: #98B4D4 ; border-style:solid; border-top-color: black; border-bottom-right-radius:15px; margin-right: 5px; border-bottom-left-radius:15px; box-shadow: 0px 2px 6px;  font-size: 20px; font-weight: bold;}
+    #profile_button:hover {color: #7cff85;}
+    #headline_button:hover {color: #7cff85;}
+    #submit_post:hover {background-color: white; padding: 12px;}
+    #headline {font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color:black; opacity: 0.7; color: white; font-size: 40px; width:88%; margin: 0 auto; text-align: center;}
+    #list_repos {font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; flex-wrap: wrap;}
+    #post_form {font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0 auto; padding: 200px; width: 60%; display: flex; flex-direction: column; }
+    #post {font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #98B4D4;}
 
 
 block content
-  h1 on profile #{data.user}
-  h2 content #{data.data}
+  div(class="container-row-buttons")
+    button(class="buttons" id="profile_button") Profile
+    button(class="buttons") Feed
+    button(class="buttons" id="headline_button") Headlines
+    button(class="buttons") Logout
+  div(id="headline")
+    pre(style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;"). 
+      Welcome to hackr (Development version v1.0.3) 
+      
+      Now configuring Oauth to appplication (Almost at stable release)
+  div(class="container-row" id="profile_box" width="100%")
+    div(class="container-item-1")
+      div(style="background-color:#7cff85; width: 100%;")
+        img(alt="github icon" src="https://cdn.iconscout.com/icon/free/png-256/github-1693585-1442626.png" style="margin-right: -1px; text-align: none !important;" width="70px")    
+      a(style="font-size: 40px;", id="uNameAnchor")           
+        img(alt="Photo of user", id="avatar", width="300px", style="border-style:solid; border-color:black; border-radius: 12px; margin:20px;") 
+      h1 #{user.user}      
+      br
+      h3(id="bio_text", style="font-size: 25px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;")
+      hr
+      h3(id="num_repos")
+      hr
+      div(id="list_repos")
+  br
+  div(id="post_form", align="center")
+    div(style="background-color:#7cff85; width: 100%;")
+      h3(style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 40px;") Post to board  
+    div(id="post")
+      textarea(id="post_text",name="text", type="text", style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: black; opacity: 0.7; color: white; margin:25px; text-align:center; font-size: 33px; width:66%; font-weight: bold;")
+      br
+      button(id="submit_post", class="buttons-post") Post
+      p
+    div(id="feed_div") 
+
+    script. 
+      document.getElementById("profile_button").addEventListener('click', showProfile)
+      document.getElementById("headline_button").addEventListener('click', showHeadline)
+      document.getElementById("submit_post").addEventListener('click', createPost)
+
+
+      const username = "#{user.user}"
+      document.getElementById("uNameAnchor").setAttribute("href", `https://github.com/${username}`)
+      const data = "#{user.profile}"
 
 
 
 
-  
+      let git_data,
+        errors = [],
+        repo_data, 
+        bioText, 
+        avatarUrl, 
+        reposUrl, 
+        mainUrl,
+        feed,
+        numRepos;
+
+
+      function showHeadline(){
+      let style = document.getElementById("headline").style
+        if (style.display === 'block') {
+          style.display = 'none'
+        }else {
+          style.display = 'block'
+        }
+      }
+
+      function showProfile() {
+        let style = document.getElementById("profile_box").style
+          if (style.display === 'flex') {
+            style.display = 'none'
+          }else {
+            style.display = 'flex'
+          }
+      }
+
+
+      function createPost() {
+        const post_text = document.getElementById('post_text').value.trim();
+        const post_val = document.getElementById('post_text').value
+          sent_post = (async () => {
+            await fetch(
+              window.location.href,
+              {
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                  user: username,
+                  avatar: avatarUrl,
+                  post: post_text
+                })
+              }).then(response => {
+                return response.json()
+              })
+              .then(response => {
+                alert(response.message)
+                post_value = ''
+                window.location.reload()
+              })
+              .catch(err => {
+                alert(err.message)
+              })
+
+              }
+              )()
+        return sent_post
+      }
+
+
+
+      get_data = (async () => {
+      const fetch_data = await fetch(`https://api.github.com/users/${username}`)
+        .then(data => { return data.json() })
+        .then(data => { git_data = data })
+        .catch(err => { return errors.push("func 'get_data()' -> CATCHED ERROR") })
+        return fetch_data
+      })() 
+
+
+      get_feed = (async () => {
+      let { href } = window.location
+      const run_feed = await fetch(href.replace(`/profile/${username}`, '/feed')).then(response => {return response.json()})
+        .then(response => {
+          feed = response
+        })
+        .catch(err => {
+          return err.message;
+        })
+        return run_feed;
+      })()
+
+
+      setTimeout(() => {
+      
+      const { bio, avatar_url, public_repos, url, repos_url } = git_data
+        bioText = bio;
+        reposUrl = repos_url;
+        avatarUrl = avatar_url;
+        reposUrl = repos_url;
+        mainUrl = url;
+        numRepos = public_repos;
+     
+      }, 1000)
+
+
+
+
+      get_repos = (async () => {
+        //- console.log(reposUrl)
+        const fetch_data = await fetch(reposUrl)
+        .then(data => { return data.json() })
+        .then(data => { repo_data = data })
+        .catch(err => { return errors.push("func 'get_repos()' -> CATCHED ERROR") })
+        return fetch_data
+        })
+
+
+
+      //-This sets the data for num of repos and the bio
+      setTimeout(() => {
+        get_repos()
+       
+        //- console.log(bioText, avatarUrl, reposUrl, mainUrl)
+          document.getElementById("avatar").setAttribute('src', avatarUrl)
+          document.getElementById("num_repos").innerText = `Repositories: ${numRepos}`
+          document.getElementById("bio_text").innerText = bioText || null       
+      }, 1200)
+
+
+
+
+
+        //-This is what lists the repos.
+      setTimeout(() => {
+
+        let count = 0; 
+        let none = ['none']       
+        repo_data.forEach(element => {
+        let parent = document.getElementById("list_repos")          
+        let div = document.createElement("div");
+        let number = document.createElement("h4");
+        let anchor = document.createElement("a");
+        let breakSt = document.createElement("br")
+        let horzBrkSt = document.createElement("hr")
+
+        div.style = 'margin: 0 auto; border-radius:10px; opacity:0.6; margin-bottom: 20px; text-decoration: none; width:50%; border-style: solid; padding: 12px; background-color: black;' 
+
+        number.innerText = ++count;
+        number.style = 'font-size: 20px; color: #7cff85;' 
+
+        anchor.setAttribute("href", element.html_url);
+        anchor.innerText = element.name;          
+        anchor.style = 'font-size: 25px; color: white; text-decoration: none;'
+
+        horzBrkSt.style = 'color:#7cff85;'
+
+        div.appendChild(number)
+        div.appendChild(anchor)
+
+
+        parent.appendChild(div)
+        parent.appendChild(breakSt)
+        })
+
+      }, 1500)
+
+        //-T
+
+
+        //-This loads all the posts on the page.
+      setTimeout(() => {
+        console.log(feed)
+      }, 1800)
+
+      //- alert(`Welecome ${data}`)
+      //-alert(git_data)

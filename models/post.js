@@ -1,7 +1,11 @@
 const mongoose = require('mongoose'),
 PostSchema = mongoose.Schema(
     {
-        username: {
+        avatar: {
+            type: String,
+            required: true
+        },
+        user: {
             type: String,
             required: true
         },
@@ -17,3 +21,4 @@ PostSchema = mongoose.Schema(
 )
 
 module.exports = mongoose.model('Post', PostSchema);
+

@@ -6,17 +6,12 @@ UserSchema = mongoose.Schema(
             required:true,
             unique: true
         },
-        data: {
-            type: Object,
-            default: {}
-        },
         online: {
             type: Boolean,
             default: false
         },
-        git_id: {
+        gitid: {
             type: Number,
-            required: true,
             unique: true
         },
         registerDate: {

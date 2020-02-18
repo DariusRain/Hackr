@@ -3,8 +3,10 @@ const express = require("express"),
   mongoose = require("mongoose"),
   cors = require("cors"),
   path = require('path'),
+  cookieParser = require('cookie-parser'),
   auth = require('./routes/auth'),
   passport = require('passport'),
+  expressSession = require('express-session'),
   cookieSession = require('cookie-session'),
   passportSetup = require('./config/passport-setup'),
   volleyball = require('volleyball');
@@ -15,14 +17,19 @@ const user = require("./routes/user");
 
 server.set('view engine', 'pug');
 server.set('views', path.join(__dirname, 'views'))
+// server.use(cookieParser())
 
 //Cookie session
+
+//Stores a cookie as a session for a day
+//NOTE: Enviorment variables are set from path "../../bash/set_dev_env.sh"
 server.use(cookieSession({
   maxAge: 24 * 60 * 60 * 10000,
   keys: [process.env.COOKIE_KEY]
 }))
 
-//Initialize passport
+//Initialize passport & Allow session cookies
+
 server.use(passport.initialize())
 server.use(passport.session())
 

@@ -8,11 +8,11 @@ router.get('/login', (req, res) => {
     })
 })
 router.get('/github', passport.authenticate('github'))
-router.get('/github/callback', passport.authenticate('github', {failureRedirect: '/'}),
-(req, res) => {
-    console.log(req.user)
-    res.redirect(`../../user/profile/${req.user._id}`)
-   // res.redirect(`../../user/profile/${res.id}`)
+router.get('/github/callback', passport.authenticate('github'), (req, res) => {
+  // res.send(req.user)
+    //res.redirect(`../../user/profile/${req.user._id}`)
+    //console.log(req.user.profile)
+    res.redirect(`../../user/profile/${req.user.user}`)
 }
 )
 
