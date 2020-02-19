@@ -38,8 +38,9 @@ router.get('/profile/:username', authCheck, async (req, res) => {
     })
     
 router.get('/feed', authCheck, async (req, res) => {
-    await Post.find().then(result => {
-        return res.status(200).json(result)
+    await Post.find({}).then(result => {
+      console.log(result)
+        return res.status(200).send(result)
       })
       .catch(err => {
         return res.status(500).json({
@@ -49,7 +50,17 @@ router.get('/feed', authCheck, async (req, res) => {
 })
   
 
+  // router.put('/dislike/:username/:postid', async (req, res) => {
 
+  //       await Post.findOne({_id: req.params.postid})
+  //         .then(post => {
+  //           if(!post.thumbdowns.indexOf(req.params.username)) {
+  //             Post.updateOne()  
+  //           }
+            
+  //         })
+
+  // })
 
     router.post('/profile/:username', authCheck, async (req, res) => {
 

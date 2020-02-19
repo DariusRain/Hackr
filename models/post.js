@@ -15,8 +15,15 @@ PostSchema = mongoose.Schema(
             required: true,
             minlength: 3,
             maxLength: 300
+        },
+        thumbups: {
+            type: Array,
+            tags: ['thumbups'] 
+        },
+        thumbdowns: {
+            type: Array,
+            tags: ['thumbdowns']
         }
-
     }
 )
 
