@@ -1,0 +1,21 @@
+extends index.pug
+
+block head
+    style.
+        * {"font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;"}
+        #footer {"text-align: center; margin: 0 auto; color: white; background-color: black; opacity: 0.7"}  
+        #login { margin: 0 auto; width: 80%; display: flex; flex-direction: column;}
+        #jumbo {background-color: grey; opactiy:0.3; padding:12px; margin: 12px; text-align: center; boreder-radius: 5px;}
+        .button-option {background-color: white; padding: 2px; width: 30%; margin: 0 auto; border-radius:45px;}
+        .button-option:hover {background-color: #7cff85; width: 30%; margin: 0 auto;}
+block content 
+     div(id="login") 
+        div(id="jumbo")
+            pre(style="font-size: 30px;"). 
+                v1.0.3 
+                Log in with github for a test run!
+            div(class="button-option")
+                a(class="flex-item", href="github")
+                    img(src="https://cdn.iconscout.com/icon/free/png-256/github-1693585-1442626.png" width="100px") 
+                pre(style="font-size: 30px; border-radius: 45px; background-color: #98B4D4;"). 
+                    Sign in 

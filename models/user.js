@@ -1,27 +1,18 @@
 const mongoose = require('mongoose'),
 UserSchema = mongoose.Schema(
     {
-        username: {
+        user: {
             type: String,
-            minlength: 2,
-            maxlength: 255,
-            required: true,
+            required:true,
             unique: true
-        },
-
-        password: {
-            type: String,
-            required: true,
-            minlength: 5,
-            maxlength: 255
         },
         online: {
             type: Boolean,
             default: false
         },
-        data: {
-            type: Object,
-            default: {}
+        gitid: {
+            type: Number,
+            unique: true
         },
         registerDate: {
             type: Date,

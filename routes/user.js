@@ -1,15 +1,16 @@
+
+
+
+
+
+
 const express = require("express"),
   router = express.Router(),
-  mongoose = require('mongoose'),
+  authCheck = require('./middleware/auth-check'),
+  request = require('superagent'),
   User = require("../models/user"),
-  Post = require("../models/post"),
-  bcrypt = require("bcryptjs"),
-  jwt = require("jsonwebtoken"),
-  tokenMware = require("../middleware/jwt"),
-  SECRET_KEY = process.env.JWT_SEC;
-
-
-  router.use(express.static('public'))
+  Post = require("../models/post");
+  
 
 
 router.get("/", async (req, res) => {
@@ -17,68 +18,72 @@ router.get("/", async (req, res) => {
   res.send("On root.");
 });
 
-router.post("/signup", async (req, res) => {
-  console.log(req.body);
-  const newUser = new User({
-    username: `${req.body.username}`,
-    password: bcrypt.hashSync(req.body.password),
-    data: req.body.data
-    });
-
-  try {
-
-    const savedUser = await newUser.save();
-    // const experation = 20 * 60 * 60;
-    // const accessToken = jwt.sign({ id: newUser._id }, SECRET_KEY, {
-    //   expiresIn: experation
-    // });
-    res.json({
-      user: savedUser
-      // access_token: accessToken,
-      // expiresIn: experation
-    });
-  } catch (err) {
-    console.log(err);
-    res.send(err);
-  }
 
 
-    res.json({message: 'Invalid Github Username'})
-});
 
-router.post("/login", async (req, res) => {
-    const loginRequest = await User.findOne({username: req.body.username});
-    
-  try {
-    const authenticate = await bcrypt.compare(req.body.password, loginRequest.password);
-      if(loginRequest && authenticate){
-        const id = loginRequest._id
-        console.log(id)
-        res.json({
-         id: loginRequest._id
-        })
-      }
-  }
-  catch(err){
-           //res.json({message: err})
-           console.log(0)
-  }
-})
 
-router.get('/profile/:id',  async (req, res) => {
+router.get('/profile/:username', authCheck, async (req, res) => {
     console.log('On Profile')
-     await User.findOne({_id: req.params.id}).then(result => {
-        console.log(5, result)
+   
+    await User.findOne({user: req.params.username}).then(result => {
         res.render('user', {
-            data: result
-        })
+          user: req.user
+      }) 
+
     }).catch(err => {
      return res.status(500).json({
             message: 'Internal Server Error!'
         })
     })
+    
+router.get('/feed', authCheck, async (req, res) => {
+    await Post.find({}).then(result => {
+      console.log(result)
+        return res.status(200).send(result)
+      })
+      .catch(err => {
+        return res.status(500).json({
+          message: 'Unable to obtain feed data.'
+        })
+      })
 })
+  
 
+  // router.put('/dislike/:username/:postid', async (req, res) => {
+
+  //       await Post.findOne({_id: req.params.postid})
+  //         .then(post => {
+  //           if(!post.thumbdowns.indexOf(req.params.username)) {
+  //             Post.updateOne()  
+  //           }
+            
+  //         })
+
+  // })
+
+    router.post('/profile/:username', authCheck, async (req, res) => {
+
+    const post = new Post({
+      avatar: req.body.avatar.toString(),
+      user: req.body.user.toString(),
+      post: req.body.post.toString() 
+    }) 
+    console.log('Post', post)
+    try {
+      const savedPost = await post.save();
+      console.log(savedPost)
+      return res.status(201).json({
+        message: "Post Submitted.",
+      })
+    }
+    catch (err) {
+      console.log(err)
+      return res.status(500).json({
+        message: "Post error."
+      })
+    }
+
+  })
 
 router.post('/post-it', async (req, res) => {
   const newPost = new Post({

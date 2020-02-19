@@ -5,7 +5,11 @@ PostSchema = mongoose.Schema(
             type: String,
             required: true
         },
+<<<<<<< HEAD
         username: {
+=======
+        user: {
+>>>>>>> Oauthv1.0.1
             type: String,
             required: true
         },
@@ -19,6 +23,7 @@ PostSchema = mongoose.Schema(
             tags: ['posts'],
             required: true,
             minlength: 3,
+<<<<<<< HEAD
             maxLength: 255
         },
         upvotes: {
@@ -40,7 +45,20 @@ PostSchema = mongoose.Schema(
             type: Array,
             tags:['downvoters', 'voters']
         } 
+=======
+            maxLength: 300
+        },
+        thumbups: {
+            type: Array,
+            tags: ['thumbups'] 
+        },
+        thumbdowns: {
+            type: Array,
+            tags: ['thumbdowns']
+        }
+>>>>>>> Oauthv1.0.1
     }
 )
 
 module.exports = mongoose.model('Post', PostSchema);
+

@@ -1,46 +1,16 @@
-doctype html
-head
-  meta(charset='UTF-8')
-  meta(name='viewport', content='width=device-width, initial-scale=1.0')
-  meta(http-equiv='X-UA-Compatible', content='ie=edge')
-  link(rel='stylesheet', type='text/css', href='./css/login.css')
-  title &#x1F468;&zwj;&#x1F4BB;Hackr
-header
-  #heading-div
-    h1 &#x1F468;&zwj;&#x1F4BB;Hackr
-.login-box(align='center')
-  form#form_login
-    h4 Login
-    label Username
-    br
-    input(type='text', placeholder='myname123', name='github_username', required='true')
-    br
-    br
-    label Password
-    br
-    input(type='password', placeholder='password', name='login_password', required='true')
-    hr
-    button#login(type='submit') Login
-    br
-  form#form_signup
-    h4 Sign-up
-    label Github Username:
-    br
-    input(type='text', placeholder='myname123', name='github_signup', required='true')
-    br
-    br
-    label Password
-    br
-    input(type='password', placeholder='password', name='password1_signup', required='true')
-    br
-    br
-    label Password Again
-    br
-    input(type='password', placeholder='password', name='password2_signup', required='true')
-    hr
-    button#signup(type='submit') Sign Up
-.all-users
-script(src='./js/login.js')
-footer
-  #footerz
-    | &#x1F468;&zwj;&#x1F4BB;Hackr 2020&copy;
+doctypehtml
+html
+  head
+    block head
+
+    title &#x1F468;&zwj;&#x1F4BB;#{title}
+  body(style="margin: 0")
+    header(style=" background-color: #7cff85; box-shadow: 0px 2px 12px;")
+      img(src="https://res.cloudinary.com/cloud-99/image/upload/v1581976529/logo_hackr_ajecd0.png")
+    block content
+   
+    block foot
+      footer(id="footer" align="center")
+        pre. 
+          © 2020 &#x1F468;&zwj;&#x1F4BB;Hackr 
+          Made By Darius Rain

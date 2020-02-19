@@ -2,21 +2,53 @@
 const express = require("express"),
   mongoose = require("mongoose"),
   cors = require("cors"),
+<<<<<<< HEAD
   port = process.env.PORT,
   db = process.env.DB;
+=======
+  path = require('path'),
+  cookieParser = require('cookie-parser'),
+  auth = require('./routes/auth'),
+  passport = require('passport'),
+  expressSession = require('express-session'),
+  cookieSession = require('cookie-session'),
+  passportSetup = require('./config/passport-setup'),
+  volleyball = require('volleyball');
+>>>>>>> Oauthv1.0.1
 const server = express();
-
 const home = require("./routes/home");
 const user = require("./routes/user");
 
-server.use(express.static('public'))
+
 server.set('view engine', 'pug');
-server.set('views')
+server.set('views', path.join(__dirname, 'views'))
+// server.use(cookieParser())
+
+//Cookie session
+
+//Stores a cookie as a session for a day
+//NOTE: Enviorment variables are set from path "../../bash/set_dev_env.sh"
+server.use(cookieSession({
+  maxAge: 24 * 60 * 60 * 10000,
+  keys: [process.env.COOKIE_KEY]
+}))
+
+//Initialize passport & Allow session cookies
+
+server.use(passport.initialize())
+server.use(passport.session())
+
+
 server.use(cors())
 server.use(express.json());
+<<<<<<< HEAD
+=======
+server.use(express.urlencoded({extended: false}))
+server.use(volleyball)
+>>>>>>> Oauthv1.0.1
 server.use("/", home);
 server.use("/user", user);
-
+server.use('/auth', auth)
 mongoose.connect(
   db,
   { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },
