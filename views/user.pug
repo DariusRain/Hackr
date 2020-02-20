@@ -12,9 +12,9 @@ block head
     #submit_post:hover {background-color: white; padding: 12px;}
     #headline {font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color:black; opacity: 0.7; color: white; font-size: 40px; width:88%; margin: 0 auto; text-align: center;}
     #list_repos {font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; flex-wrap: wrap;}
-    #post_form {font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0 auto; padding: 100px; width: 60%; display: flex; flex-direction: column; }
+    #post_form {font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0 auto;  padding: 50px; width: 88%; display: flex; flex-direction: column; }
     #post {font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #98B4D4;}
-    #feed_div {display: flex; flex-direction: column;}
+    #feed_div {display: flex; flex-direction: column; flex-wrap:wrap; height:100%;}
 
 
 block content
@@ -26,14 +26,14 @@ block content
   div(id="headline")
     pre(style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;"). 
       Welcome to hackr (Development version v1.0.3) 
-      
+
       Now configuring Oauth to appplication (Almost at stable release)
   div(class="container-row" id="profile_box" width="100%")
     div(class="container-item-1")
       div(style="background-color:#7cff85; width: 100%;")
         img(alt="github icon" src="https://cdn.iconscout.com/icon/free/png-256/github-1693585-1442626.png" style="margin-right: -1px; text-align: none !important;" width="70px")    
       a(style="font-size: 40px;", id="uNameAnchor")           
-        img(alt="Photo of user", id="avatar", width="300px", style="border-style:solid; border-color:black; border-radius: 12px; margin:20px;") 
+        img(alt="Photo of user", id="avatar", width="200px", style="border-style:solid; border-color:black; border-radius: 12px; margin:20px;") 
       h1 #{user.user}      
       br
       h3(id="bio_text", style="font-size: 25px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;")
@@ -57,7 +57,7 @@ block content
       document.getElementById("headline_button").addEventListener('click', showHeadline)
       document.getElementById("submit_post").addEventListener('click', createPost)
 
-
+      
       const username = "#{user.user}"
       document.getElementById("uNameAnchor").setAttribute("href", `https://github.com/${username}`)
       const data = "#{user.profile}"
@@ -142,7 +142,10 @@ block content
 
       get_feed = (async () => {
       let { href } = window.location
-      const run_feed = await fetch(href.replace(`/profile/${username}`, '/feed')).then(response => {return response.json()})
+      const run_feed = await fetch(href.replace(`/profile/${username}`, '/feed'))
+        .then(response => {
+          return response.json()
+          })
         .then(response => {
           feed = response
         })
@@ -168,14 +171,14 @@ block content
 
 
 
-      get_repos = (async () => {
+      get_repos = async () => {
         //- console.log(reposUrl)
         const fetch_data = await fetch(reposUrl)
         .then(data => { return data.json() })
         .then(data => { repo_data = data })
         .catch(err => { return errors.push("func 'get_repos()' -> CATCHED ERROR") })
         return fetch_data
-        })
+        }
 
 
 
@@ -237,33 +240,39 @@ block content
           let div = document.createElement("div"),
             img = document.createElement("img"),
             a = document.createElement("a"),
-            pre = document.createElement("pre"),
-            breakSt = document.createElement("br"),
+            h3 = document.createElement("h3"),
+            plinebr = document.createElement("p"),
+            pre = document.createElement("p"),
+            breakSt = document.createElement("hr"),
             horzBreak = document.createElement("hr"),
             thumbUp = document.createElement("a"),            
             thumbDown = document.createElement("a");
-
-            div.style = 'background-color: #98B4D4; width: 66%; margin: 0 auto; margin-bottom: 12px; text-align: center; padding: 20px;';
-            pre.style = 'background-color: black; text-align: center; opacity: 0.7; width: 50%; border-radius:12px; color: white; padding: 20px; margin: 0 auto; font-size: 20px;';
-            thumbUp.style = 'font-size: 40px; text-decoration: none;'
-            thumbDown.style = 'font-size: 40px; text-decoration: none;'
-            horzBreak.style = 'background-color: #7cff85; margin-top: 20px; height: 10px; border-radius: 12px;'
+            breakSt.style= 'background-color: #7cff85; width:100%; margin-top: 20px; height: 7px; border-radius: 12px;';
+            div.style = 'background-color: #98B4D4; width: 70%;margin: 0 auto; margin-bottom: 40px; border-radius:12px; padding: 20px; display:flex; flex-direction: row; flex-wrap: wrap;'
+            pre.style = 'overflow-wrap: break-word; hyphens: auto;  background-color: black; opacity: 0.6; border-radius:12px;  text-align: center; padding: 20px; color: white; width:88%; margin: 0 auto; font-size: 29px;';
+            thumbUp.style = 'width:50%; text-align: center; font-size: 40px; text-decoration: none; margin:0 auto;'
+            thumbDown.style = 'width:50%; font-size: 40px; text-align:center; text-decoration: none; margin:0 auto;'
+            img.style = 'border-radius: 12px; border-color: black; width:100px; border-style: solid; float:left; ';
+            h3.style = 'width:100%; float:left; font-size: 20px;'
+            horzBreak.style = 'background-color: #7cff85; width:100%; margin-top: 20px; height: 7px; border-radius: 12px;'
             img.setAttribute('src', object.avatar);
-            img.style = 'border-radius: 12px; border-color: black; width:100px; border-style: solid; margin-bottom: 20px;';
-            a.setAttribute('href', `https://www.github.com/${object.username}`);
-            thumbDown.setAttribute('href', `http://localhost:5000/user/thumbup/${username}/${object._id}`)
-            thumbUp.setAttribute('href', `http://localhost:5000/user/thumbdown/${username}/${object._id}`)
+            a.setAttribute('href', `https://www.github.com/${object.user}`);
+            thumbDown.setAttribute('href', `http://localhost:5000/user/thumbdown/${username}/${object._id}`)
+            thumbUp.setAttribute('href', `http://localhost:5000/user/thumbup/${username}/${object._id}`)
             a.appendChild(img);
             thumbUp.innerText = '👍';
             thumbDown.innerText = '👎';
-            pre.innerText = object.post;
+            plinebr.innerText = '\n'
+            pre.innerText = `${object.post}`;
+            h3.innerText = object.user
             div.appendChild(a);
-            div.appendChild(horzBreak);
-            div.appendChild(pre);
-            div.appendChild(horzBreak);
+            div.appendChild(h3);
+            div.appendChild(breakSt);            
+            div.appendChild(pre);            
+            div.appendChild(horzBreak);            
             div.appendChild(thumbUp);
-            div.appendChild(thumbDown)
-            parent.appendChild(div)
+            div.appendChild(thumbDown);
+            parent.appendChild(div);
         })
       }, 1800)
 

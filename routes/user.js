@@ -38,7 +38,7 @@ router.get('/profile/:username', authCheck, async (req, res) => {
     })
     
 router.get('/feed', authCheck, async (req, res) => {
-    await Post.find({}).then(result => {
+    await Post.find().then(result => {
       console.log(result)
         return res.status(200).send(result)
       })
