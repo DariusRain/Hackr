@@ -2,17 +2,12 @@
 const express = require("express"),
   mongoose = require("mongoose"),
   cors = require("cors"),
-<<<<<<< HEAD
-  port = process.env.PORT,
-  db = process.env.DB;
-=======
   path = require('path'),
   auth = require('./routes/auth'),
   passport = require('passport'),
   cookieSession = require('cookie-session'),
   passportSetup = require('./config/passport-setup'),
   volleyball = require('volleyball');
->>>>>>> Oauthv1.0.1
 const server = express();
 const home = require("./routes/home");
 const user = require("./routes/user");
@@ -36,11 +31,8 @@ server.use(passport.session())
 
 server.use(cors())
 server.use(express.json());
-<<<<<<< HEAD
-=======
 server.use(express.urlencoded({extended: false}))
 server.use(volleyball)
->>>>>>> Oauthv1.0.1
 server.use("/", home);
 server.use("/user", user);
 server.use('/auth', auth)
