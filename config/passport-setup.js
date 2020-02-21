@@ -49,16 +49,37 @@ passport.use(
         const newUser = new User({
             user: profile.username,
             gitid: profile.id,
-            online: true
+            online: true,
+            access_token: accessToken,
+            refresh_token: refreshToken
         })
         await User.findOne({gitid: profile.id}).then(user => {
-            if(!user){
+            if(!user ){
                 console.log(1, user)
-            const saveUser = newUser.save()
-            return done(null, saveUser)
-            }else {
-            console.log(2, user)
-            return done(null, user)
+            
+                const saveUser = newUser.save()
+                return done(null, saveUser)
+            
+        
+            }
+            
+            else if(!user.access_token === accessToken && user.refresh_token === refreshToken){
+
+                User.findByIdAndUpdate(user.id, {$set: {
+                    access_token: accessToken,
+                    refresh_token: refreshToken
+                    }
+                })
+
+                console.log(2, user)
+                return done(null, user)
+            
+            }
+            else {   
+                
+                console.log(3, user)    
+                return done(null, user)
+
             }
             
     })
