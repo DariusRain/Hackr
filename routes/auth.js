@@ -10,7 +10,7 @@ router.get('/login', (req, res) => {
 router.get('/github', passport.authenticate('github'))
 
 router.get('/github/callback', passport.authenticate('github'), (req, res) => {
-    res.redirect(`../../user/profile/${req.user.user}`)
+    res.cookie("AccessToken", req.user.accessToken).redirect(`../../user/profile/${req.user.username}`)
 }
 )
 

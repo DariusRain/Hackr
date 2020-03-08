@@ -6,7 +6,6 @@ const passport = require('passport');
 const GitHubStrategy = require('passport-github').Strategy
 
 
-
 const User = require('../models/user');
 
 //Stuffing cookie in browser
@@ -16,8 +15,8 @@ const User = require('../models/user');
 //This method inherits from the callback function in "new GitHubStrategy({...})""
 //This sends the cookie to the browser.
 //This method encrpyts the Mongoose ID from the inherited user Object.
-passport.serializeUser((user, done) => {
-        done(null, user.id)
+passport.serializeUser((temp, done) => {
+        done(null, temp.id)
 })
 
 //Deserialize cookie
@@ -52,13 +51,24 @@ passport.use(
             online: true
         })
         await User.findOne({gitid: profile.id}).then(user => {
+        
             if(!user){
-                console.log(1, user)
-            const saveUser = newUser.save()
-            return done(null, saveUser)
+            const user = newUser.save()
+            let temp = {}
+            temp.accessToken = accessToken
+            temp.refreshToken = refreshToken
+            temp.username = user.user
+            temp.id = user._id
+            console.log(1, user)        
+            return done(null, temp)
             }else {
-            console.log(2, user)
-            return done(null, user)
+            let temp = {}
+            temp.accessToken = accessToken
+            temp.refreshToken = refreshToken
+            temp.username = user.user
+            temp.id = user._id               
+            console.log(2, temp)
+            return done(null, temp)
             }
             
     })
