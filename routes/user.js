@@ -49,71 +49,74 @@ router.get('/feed', authCheck, async (req, res) => {
 })
   
 
-router.get('/:option/:username/:postid', async (req, res) => {
+router.put('/vote/:option/:postId', authCheck, async (req, res) => {
 
-  const { option, username, postid } = req.params;
-  console.log(option, username, postid)
-  const post = await Post.findById(postid);
-  
-  const isNotInLike = await post.thumbups.every(user => {
-    user != username
-  })
+  const { option, postId } = req.params;
+  console.log(option, req.user, postId)
+  const username = req.user.user
+  const post = await Post.findById(postId);
+console.log(username)  
+  const isNotInLike = await post.thumbups.indexOf(username) === -1
 
-  const isNotInDislike = await post.thumbdowns.every(user => {
-    user != username
-  }) 
+  const isNotInDislike = await post.thumbdowns.indexOf(username) === -1
 
   const isNotInEither = isNotInDislike && isNotInLike;
   
-
     try {
     switch(option) {
 
-        case 'dislike': 
+        case 'down-vote': 
         console.log(1, 'Dislike')  
         console.log(isNotInLike, isNotInDislike, isNotInEither)
         // IS not in either
         if (isNotInEither) {
-          console.log(1, 'Is not in either');
+          console.log( 'Is not in either');
 
             const update1 = await post.updateOne({$push: {thumbdowns: username}});
+            res.send(1)
+
             // Is in not in dislike but is in like
           } else if (isNotInDislike && !isNotInLike) {
-            console.log(1, 'Is not in but in other');
+            console.log('Is not in but in other');
 
             const removeLike = await post.updateOne({$pull: {thumbups: username}})
             const update2 = await post.updateOne({$push: {thumbdowns: username}});
+            res.send(1)
+
           } else if (!isNotInDislike){
-            console.log(1, 'Allready In');
+            console.log( 'Allready In');
 
             const removeDislike = await post.updateOne({$pull: {thumbdowns: username}});          
+            res.send(0)
           }
-          res.redirect(`/user/profile/${username}`)
           break;
 
-        case 'like':
+        case 'up-vote':
         // IS not in either
         if (isNotInEither) {
-          console.log(1, 'Is not in either');
-
+          console.log('Is not in either');
+            
             const update1 = await post.updateOne({$push: {thumbups: username}});
             // Is in not in dislike but is in like
+            res.send(1)
           } else if (isNotInLike && !isNotInDislike) {
-            console.log(1, 'Is not in but in other');
+            console.log('Is not in but in other');
 
             const removeLike = await post.updateOne({$pull: {thumbdowns: username}})
             const update2 = await post.updateOne({$push: {thumbups: username}});
+            res.send(1)
           } else if (!isNotInLike){
-            console.log(1, 'Allready In');
+            console.log( 'Allready In');
 
-            const removeDislike = await post.updateOne({$pull: {thumbups: username}});          
+            const removeDislike = await post.updateOne({$pull: {thumbups: username}}); 
+            res.send(0)
+         
           }
-          res.redirect(`/user/profile/${username}`)
           break;
 
         default:
-        console.log(3, 'Forbidden Request (Like/Dislike')
-        res.redirect(`/user/profile/${username}`)
+        console.log( 'Forbidden Request (Like/Dislike)')
+        res.send("0")
           break;
 
     } 
@@ -136,7 +139,7 @@ router.get('/:option/:username/:postid', async (req, res) => {
 
 
   // try {
-  //     const post = await Post.findOne({_id: req.params.postid});
+  //     const post = await Post.findOne({_id: req.params.postId});
   //     const option 
   //     const isInLike = await post.thumbsUp.every(user => {
   //       user != req.params.username

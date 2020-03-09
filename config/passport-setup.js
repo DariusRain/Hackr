@@ -46,7 +46,7 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
         //console.log(profile)
         const newUser = new User({
-            user: profile.username,
+            user: profile.username.trim(),
             gitid: profile.id,
             online: true
         })
