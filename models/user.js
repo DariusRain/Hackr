@@ -10,6 +10,12 @@ UserSchema = mongoose.Schema(
             type: Boolean,
             default: false
         },
+        access_token: {
+            type: String
+        },
+        refresh_token: {
+            type: String
+        },
         gitid: {
             type: Number,
             unique: true

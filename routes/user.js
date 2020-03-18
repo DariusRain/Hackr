@@ -126,6 +126,7 @@ router.put("/vote/:option/:postId", authCheck, async (req, res) => {
         console.log("Forbidden Request (Like/Dislike)");
         res.send("0");
         break;
+
     }
   } catch {
     console.log(403, "Forbidden request (Like/Dislie)");
@@ -197,9 +198,27 @@ router.get("/logout", authCheck, async (req, res) => {
   }
 });
 
+router.post('/post-it', async (req, res) => {
+  const newPost = new Post({
+    avatar: req.body.avatar,
+    username: req.body.username,
+    uid: req.body.uid,
+    post: req.body.post
+  });
+
+  try {
+    const savedPost = newPost.save();
+      res.json(savedPost)
+  }
+  catch (err) {
+    res.json(err)
+    console.log(err)
+  }
+})
 
 router.use("/", (req, res, next) => {
   res.render('errors', {data: { message: "404 Not found" } });
+
 })
 
 

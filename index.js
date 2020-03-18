@@ -56,15 +56,17 @@ server.use("/", (req, res, next) => {
   res.render('errors', {  data: { message: "404 Not found" } });
 })
 mongoose.connect(
-  "mongodb://localhost:27017/homework-febuary",
+  db,
   { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },
   () => {
     console.log(`Connected to Database`);
   }
 );
 
+
 // Set server to listen on port
 const port = process.env.PORT;
+
 
 server.listen(port, () => {
   console.log(`Listening on ${port}`);

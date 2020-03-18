@@ -48,7 +48,9 @@ passport.use(
         const newUser = new User({
             user: profile.username.trim(),
             gitid: profile.id,
-            online: true
+            online: true,
+            access_token: accessToken,
+            refresh_token: refreshToken
         })
         await User.findOne({gitid: profile.id}).then(user => {
         
@@ -69,6 +71,7 @@ passport.use(
             temp.id = user._id               
             console.log(2, temp)
             return done(null, temp)
+
             }
             
     })

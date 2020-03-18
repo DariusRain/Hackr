@@ -6,20 +6,23 @@ PostSchema = new mongoose.Schema(
             type: String,
             required: true
         },
+
         user: {
+
             type: String,
             required: true
         },
         postDate: {
             type: Date,
             date: Date.now
+
         },
         post: {
             type: String,
             tags: ['posts'],
             required: true,
             minlength: 3,
-            maxLength: 300
+            maxLength: 3000
         },
         thumbups: {
             type: Array,
