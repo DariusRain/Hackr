@@ -1,7 +1,7 @@
 const express = require('express'),
 router = express.Router(),
-passport = require('passport');
-
+passport = require('passport'),
+User = require('../models/user');
 router.get('/login', (req, res) => {
     res.render('login', {
         title: 'Login'
@@ -9,48 +9,21 @@ router.get('/login', (req, res) => {
 })
 router.get('/github', passport.authenticate('github'))
 
-router.get('/github/callback', passport.authenticate('github'), (req, res) => {
-    res.redirect(`../../user/profile/${req.user.user}`)
+router.get('/github/callback', passport.authenticate('github'), async (req, res) => {
+    try {
+    const userOnline = await User.findByIdAndUpdate(req.user._id, {$set: {online: true}})
+
+    res.cookie("AccessToken", req.user.accessToken).redirect(`../../user/profile/${req.user.username}`)
+    }
+    catch {
+
+  
+            res.render('errors', { data : {message: "403 Forbidden"}  });
+
+    }
 }
 )
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const request = require('superagent')
-// module.exports = (req, res, next) => {
-// console.log('On callbbak')
-//         const { query } = req;
-//         const { code } = query;
-//         console.log(code)
-//         if(!code) {
-//             return res.send({
-//                 success: false,
-//                 message: 'Error no code from git'
-//             })
-//         }
-   
-// request.post('https://github.com/login/oauth/access_token').send({
-//     client_id: process.env.CLI_ID_GIT,
-//     client_secret: process.env.CLI_SEC_GIT,
-//     code: code
-// }).set('Accept', 'application/json').then(result => {
-//     const data = result.body;
-//     res.send(data)
-
-// })
-// }
 
 module.exports = router;

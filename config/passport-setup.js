@@ -6,7 +6,6 @@ const passport = require('passport');
 const GitHubStrategy = require('passport-github').Strategy
 
 
-
 const User = require('../models/user');
 
 //Stuffing cookie in browser
@@ -17,14 +16,14 @@ const User = require('../models/user');
 //This sends the cookie to the browser.
 //This method encrpyts the Mongoose ID from the inherited user Object.
 passport.serializeUser((user, done) => {
-        done(null, user.id)
+        done(null, user)
 })
 
 //Deserialize cookie
 //This method inherits from the browser cookie storage
 
-passport.deserializeUser((id, done) => {
-    User.findById(id).then(user => {
+passport.deserializeUser((user, done) => {
+    User.findById(user.id).then(user => {
         done(null, user)
     })
 })
@@ -47,38 +46,31 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
         //console.log(profile)
         const newUser = new User({
-            user: profile.username,
+            user: profile.username.trim(),
             gitid: profile.id,
             online: true,
             access_token: accessToken,
             refresh_token: refreshToken
         })
         await User.findOne({gitid: profile.id}).then(user => {
-            if(!user ){
-                console.log(1, user)
-            
-                const saveUser = newUser.save()
-                return done(null, saveUser)
-            
         
-            }
-            
-            else if(!user.access_token === accessToken && user.refresh_token === refreshToken){
-
-                User.findByIdAndUpdate(user.id, {$set: {
-                    access_token: accessToken,
-                    refresh_token: refreshToken
-                    }
-                })
-
-                console.log(2, user)
-                return done(null, user)
-            
-            }
-            else {   
-                
-                console.log(3, user)    
-                return done(null, user)
+            if(!user){
+            const user = newUser.save()
+            let temp = {}
+            temp.accessToken = accessToken
+            temp.refreshToken = refreshToken
+            temp.username = user.user
+            temp.id = user._id
+            console.log(1, user)        
+            return done(null, temp)
+            }else {
+            let temp = {}
+            temp.accessToken = accessToken
+            temp.refreshToken = refreshToken
+            temp.username = user.user
+            temp.id = user._id               
+            console.log(2, temp)
+            return done(null, temp)
 
             }
             

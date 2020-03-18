@@ -8,6 +8,7 @@ module.exports = (req, res, next) => {
         res.redirect('../../auth/login')
     }else {
         //Contitnue to the next handlers
+
         next()
     }
 }
