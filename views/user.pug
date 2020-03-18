@@ -238,6 +238,7 @@ block head
     .container-item-1 {font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #98B4D4; text-align: center; width: 100%;}
     .buttons {padding: 8px; background-color:#98B4D4; border-color: #98B4D4 ; border-style:solid; border-top-color: black; border-bottom-right-radius:15px; margin-right: 5px; border-bottom-left-radius:15px; box-shadow: 0px 2px 6px;  font-size: 20px; font-weight: bold;}
     .buttons-post {padding: 8px; background-color:#7cff85; border-color: #98B4D4 ; border-style:solid; border-top-color: black; border-bottom-right-radius:15px; margin-right: 5px; border-bottom-left-radius:15px; box-shadow: 0px 2px 6px;  font-size: 20px; font-weight: bold;}
+    #headline { display: flex; flex-direction: column; width: 100%;}
     #profile_button:hover {color: #7cff85;}
     #headline_button:hover {color: #7cff85;}
     #submit_post:hover {background-color: white; padding: 12px;}
@@ -255,9 +256,8 @@ block content
     button(class="buttons" id="headline_button") Headlines
     button(class="buttons") Logout
   div(id="headline")
-    pre(style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;"). 
+    p(style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;"). 
       Welcome to hackr (Development version v1.0.3) 
-
       Now configuring Oauth to appplication (Almost at stable release)
   div(class="container-row" id="profile_box" width="100%")
     div(class="container-item-1")
@@ -309,10 +309,10 @@ block content
 
       function showHeadline(){
       let style = document.getElementById("headline").style
-        if (style.display === 'block') {
+        if (style.display === 'flex') {
           style.display = 'none'
         }else {
-          style.display = 'block'
+          style.display = 'flex'
         }
       }
 
@@ -371,20 +371,27 @@ block content
       })() 
 
 
-      get_feed = (async () => {
-      let { href } = window.location
-      const run_feed = await fetch(href.replace(`/profile/${username}`, '/feed'))
-        .then(response => {
-          return response.json()
-          })
-        .then(response => {
-          feed = response
-        })
-        .catch(err => {
-          return err.message;
-        })
-        return run_feed;
-      })()
+      //-Add Xhr
+
+      async function myFetch(url, object) {
+        const Xhr = new XmlHttpRequest;
+        switch(object.method) {
+          case 'POST' || 'post':
+            Xhr.open(object.method.toUpperCase(), url, true);
+            Xhr.setRequestHeader("Content-Type", "application/json");
+            Xhr.send(JSON.stringify(object.body));
+            break;
+          case 'GET' || 'get':
+            Xhr.open(object.method.toUpperCase(), url, true);
+            Xhr.setRequestHeader("Content-Type", "application/json");
+            Xhr.send(JSON.stringify(object.body));                        
+            break;
+          case 'PUT' || 'put':
+            break;
+          case 'DELETE' || 'delete': 
+            break;
+        }
+      }
 
 
       setTimeout(() => {
