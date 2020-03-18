@@ -1,4 +1,7 @@
-//index.js (NEW)
+//index.js (Manin Server File)
+
+
+// Imports
 const express = require("express"),
   mongoose = require("mongoose"),
   cors = require("cors"),
@@ -8,35 +11,50 @@ const express = require("express"),
   cookieSession = require('cookie-session'),
   passportSetup = require('./config/passport-setup'),
   volleyball = require('volleyball');
+
+
+// Express Application @server
 const server = express();
 const home = require("./routes/home");
 const user = require("./routes/user");
 
+// Set Pug View Engine
 server.set('views', path.join(__dirname, 'views'))
-
 server.set('view engine', 'pug');
 server.use(express.static("public"));
 
-//Stores a cookie as a session for a day
-//NOTE: Enviorment variables are set from path "../../bash/set_dev_env.sh"
+// Cors package & volleyball - to see requests in the console.
+server.use(cors())
+server.use(volleyball)
+
+//  Stores a cookie as a session for a day
 server.use(cookieSession({
   maxAge: 24 * 60 * 60 * 10000,
   keys: [process.env.COOKIE_KEY]
 }))
 
-//Initialize passport & Allow session cookies
 
+//Initialize passport & Allow session cookies
 server.use(passport.initialize())
 server.use(passport.session())
 
 
-server.use(cors())
+
+// Routes & Middlewares
 server.use(express.json());
 server.use(express.urlencoded({extended: false}))
-server.use(volleyball)
+
+
 server.use("/", home);
 server.use("/user", user);
 server.use('/auth', auth)
+
+
+
+// Render 404 by default if none of the routes & middlewares above recognize the request.
+server.use("/", (req, res, next) => {
+  res.render('errors', {  data: { message: "404 Not found" } });
+})
 mongoose.connect(
   "mongodb://localhost:27017/homework-febuary",
   { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },
@@ -45,6 +63,7 @@ mongoose.connect(
   }
 );
 
+// Set server to listen on port
 const port = process.env.PORT;
 
 server.listen(port, () => {

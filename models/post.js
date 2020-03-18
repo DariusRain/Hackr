@@ -1,5 +1,6 @@
+
 const mongoose = require('mongoose'),
-PostSchema = mongoose.Schema(
+PostSchema = new mongoose.Schema(
     {
         avatar: {
             type: String,
@@ -8,6 +9,10 @@ PostSchema = mongoose.Schema(
         user: {
             type: String,
             required: true
+        },
+        postDate: {
+            type: Date,
+            date: Date.now
         },
         post: {
             type: String,
@@ -27,5 +32,4 @@ PostSchema = mongoose.Schema(
     }
 )
 
-module.exports = mongoose.model('Post', PostSchema);
-
+module.exports = mongoose.model('Post', PostSchema)

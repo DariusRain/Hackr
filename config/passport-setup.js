@@ -15,15 +15,15 @@ const User = require('../models/user');
 //This method inherits from the callback function in "new GitHubStrategy({...})""
 //This sends the cookie to the browser.
 //This method encrpyts the Mongoose ID from the inherited user Object.
-passport.serializeUser((temp, done) => {
-        done(null, temp.id)
+passport.serializeUser((user, done) => {
+        done(null, user)
 })
 
 //Deserialize cookie
 //This method inherits from the browser cookie storage
 
-passport.deserializeUser((id, done) => {
-    User.findById(id).then(user => {
+passport.deserializeUser((user, done) => {
+    User.findById(user.id).then(user => {
         done(null, user)
     })
 })

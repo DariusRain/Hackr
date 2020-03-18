@@ -4,37 +4,44 @@ block head
   script(src="../../user.js" defer)
    
 block content
-  div(class="container-row-buttons")
-    button(class="buttons" id="profile_button") Profile 
-    button(class="buttons") Feed
-    button(class="buttons" id="headline_button") Headlines
-    button(class="buttons" id="logout_button") Logout
+  button(class="buttons" id="profile_button") Post to Board 
+  button(class="buttons") Settings
+  button(class="buttons" id="headline_button") Hack of the day
+  button(class="buttons" id="logout_button") Logout
   div(id="headline")
     pre. 
       Welcome to hackr (Development version v1.0.3) 
 
       Now configuring Oauth to appplication (Almost at stable release)
-  div(class="container-row" id="profile_box" width="100%")
-    div(class="container-item-1")
+  div(class="whole-div")
+    div(class="left-side-flex")
       div(class="box-banner")
-        img(alt="github icon" id="github_icon" src="https://cdn.iconscout.com/icon/free/png-256/github-1693585-1442626.png")    
-      a(id="u_name_anchor")           
-        img(alt="Photo of user", id="avatar") 
-      h1(id="username_text") #{data.username.user}      
-      br
-      h3(id="bio_text")
-      hr
-      h3(id="num_repos")
-      hr
-      div(id="list_repos")
-  br
-  div(id="post_form", align="center")
-    div(class="box-banner")
-      h3(style="font-size: 20px;") Post to board  
-      div(id="post")
-        textarea(id="post_text",name="text", type="text")
-        br
-        button(id="submit_post", class="buttons-post") Post
-        
-  div(id="feed_div") 
+        img(alt="github icon" id="github_icon" src="https://www.shareicon.net/data/256x256/2015/08/29/92741_feed_512x512.png")  
+      div(id="post_form")
+        div(class="box-banner")
+          h3(style="font-size: 20px;") Post to board  
+          div(id="post")
+            textarea(id="post_text",name="text", type="text")
+            br
+            button(id="submit_post", class="buttons-post") Post
+      div(style="height: 100vh; overflow: auto;")
+        div(id="feed_div")
+
+    div(class="middle-page-flex")
+      div(id="profile_box")
+        div(class="box-banner")
+          img(alt="github icon" id="github_icon" src="https://cdn.iconscout.com/icon/free/png-256/github-1693585-1442626.png")    
+      div(style="  height: 100vh; overflow: auto;")
+        div(class="profile-section")
+          a(id="u_name_anchor")           
+            img(alt="Photo of user", id="avatar") 
+          h3(id="username_text") #{data.username.user}      
+          br
+          h5(id="bio_text")
+          hr
+          h5(id="num_repos")
+          hr
+          div(id="list_repos")
+          br
+
 

@@ -5,6 +5,8 @@ class PostCard {
     imageUrl,
     userName,
     postText,
+    postDate,
+    online,
     numOfUpVotes,
     numOfDownVotes,
     postId
@@ -18,17 +20,27 @@ class PostCard {
     let postEl = document.createElement("p");
     let downVoteEl = document.createElement("button");
     let upVoteEl = document.createElement("button");
+    let dateEl = document.createElement("kbd")
     main.className = 'div-article-main';
     contentsLeft.className = 'div-article-content-left';
     contentsRight.className = 'div-article-content-right';
+    downVoteEl.style = ' width: 100px; background-color: whitesmoke; color:#333333;'
+    upVoteEl.style = 'width: 100px; background-color:whitesmoke; color: #333333;'
+    dateEl.style = 'margin-top: 20px; width: 100px; font-style: italic;'
 
-
-
-    userNameEl.innerText = userName;
-    userNameEl.style = 'margin-bottom: 12px; text-decoration: underline; color: #ff3333;'
-    postEl.innerText = postText;
+    if(online){
+    userNameEl.innerText = `🌕 ${userName}`;
+    } else {
+      userNameEl.innerText = `🌑 ${userName}`
+    }
+    postDate = new Date(postDate)
+    postDate = postDate.toString().slice(0, 21)
+    userNameEl.style = 'margin-bottom: 12px; text-decoration: none; color: #66ff66;'
+    postEl.innerText = `${postText}`;
     downVoteEl.innerText = `🔽 ${numOfDownVotes}`;
     upVoteEl.innerText = `🔼 ${numOfUpVotes}`;
+    dateEl.innerText = `${postDate}`
+
 
     downVoteEl.id = postId;
     upVoteEl.id = postId
@@ -45,9 +57,9 @@ class PostCard {
     contentsLeft.appendChild(downVoteEl);
 
     contentsRight.appendChild(postEl);
-
     main.appendChild(contentsLeft);
     main.appendChild(contentsRight);
+    main.appendChild(dateEl)
 
     return main;
   }
@@ -59,7 +71,7 @@ class PostCard {
 // Event listeners
 document
   .getElementById("profile_button")
-  .addEventListener("click", showProfile);
+  .addEventListener("click", showPostBox);
 document
   .getElementById("headline_button")
   .addEventListener("click", showHeadline);
@@ -106,22 +118,22 @@ const fetchGitWithToken = (async () => {
           console.log(mappedResponse);
           mappedResponse.forEach(element => {
             let div = document.createElement("div");
-            let number = document.createElement("h4");
+            let number = document.createElement("h5");
             let anchor = document.createElement("a");
             let breakSt = document.createElement("br");
             let horzBrkSt = document.createElement("hr");
 
             div.style =
-              "margin: 0 auto; border-radius:10px; margin-bottom: 20px; text-decoration: none; width:50%; border-style: solid; padding: 12px; background-color:#333333;";
+              "margin: 0 auto; margin-bottom: 20px; text-decoration: none; width:50%; border-style: solid; padding: 12px; word-break: break-all; background-color:whitesmoke;";
             number.innerText = ++count;
-            number.style = "font-size: 20px; color: #a5d4d3;";
+            number.style =  "color: #3333333;";
 
             anchor.setAttribute("href", element.url);
             anchor.innerText = element.name;
             anchor.style =
-              "font-size: 25px; color: white; text-decoration: none;";
+              " color: #3333333; text-decoration: none;";
 
-            horzBrkSt.style = "color:#a5d4d3;";
+            horzBrkSt.style = "color:#66ff66;";
 
             div.appendChild(number);
             div.appendChild(anchor);
@@ -141,7 +153,8 @@ fetchGitWithToken()
 
 
 function createPost() {
-  const post_text = document.getElementById("post_text").value.trim();
+  let post_text = document.getElementById("post_text").value.trim();
+
 
   return (async () => {
     const send = await fetch(window.location.href, {
@@ -153,7 +166,8 @@ function createPost() {
       body: JSON.stringify({
         user: document.getElementById("username_text").innerText,
         avatar: document.getElementById("avatar").getAttribute("src"),
-        post: post_text
+        post: post_text,
+        postDate: new Date()
       })
     })
       .then(response => {
@@ -174,7 +188,7 @@ const getFeed = (async () => {
     const runFeed = await fetch(`http://localhost:5000/user/feed`);
     const json = await runFeed.json();
     let parent = document.getElementById("feed_div");
-
+    
     const display = json.reverse().map(postObj => {
       console.log(postObj);
       parent.appendChild(
@@ -182,6 +196,8 @@ const getFeed = (async () => {
           postObj.avatar,
           postObj.user,
           postObj.post,
+          postObj.postDate,
+          postObj.online,
           postObj.thumbups.length,
           postObj.thumbdowns.length,
           postObj._id
@@ -246,8 +262,8 @@ function showHeadline() {
   }
 }
 
-function showProfile() {
-  let style = document.getElementById("profile_box").style;
+function showPostBox() {
+  let style = document.getElementById("post_form").style;
   if (style.display === "flex") {
     style.display = "none";
   } else {
