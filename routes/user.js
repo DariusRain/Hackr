@@ -69,7 +69,8 @@ router.put("/vote/:option/:postId", authCheck, async (req, res) => {
           const update1 = await post.updateOne({
             $push: { thumbdowns: username }
           });
-          res.send(1);
+          const withChanges1 = await Post.findById(postId)
+          res.status(200).json({type:'down-vote', status: 'Not in either', downVotes: withChanges1.thumbdowns, upVotes: withChanges1.thumbups});
 
           // Is in not in dislike but is in like
         } else if (isNotInDislike && !isNotInLike) {
@@ -81,14 +82,17 @@ router.put("/vote/:option/:postId", authCheck, async (req, res) => {
           const update2 = await post.updateOne({
             $push: { thumbdowns: username }
           });
-          res.send(1);
+          const withChanges12 = await Post.findById(postId)
+
+          res.status(200).json({type: 'down-vote', status: 'Not in but the other', downVotes: withChanges12.thumbdowns, upVotes: withChanges12.thumbups});;
         } else if (!isNotInDislike) {
           console.log("Allready In");
 
           const removeDislike = await post.updateOne({
             $pull: { thumbdowns: username }
           });
-          res.send(0);
+          const withChanges2 = await Post.findById(postId)
+          res.json({type: 'down-vote', status: 'Allready in', downVotes: withChanges2.thumbdowns, upVotes: withChanges2.thumbups});
         }
         break;
 
@@ -100,8 +104,10 @@ router.put("/vote/:option/:postId", authCheck, async (req, res) => {
           const update1 = await post.updateOne({
             $push: { thumbups: username }
           });
+          const withChanges3 = await Post.findById(postId)
+
           // Is in not in dislike but is in like
-          res.send(1);
+          res.status(200).json({type: 'up-vote', status: 'Not in either', downVotes: withChanges3.thumbdowns, upVotes: withChanges3.thumbups});;
         } else if (isNotInLike && !isNotInDislike) {
           console.log("Is not in but in other");
 
@@ -111,20 +117,23 @@ router.put("/vote/:option/:postId", authCheck, async (req, res) => {
           const update2 = await post.updateOne({
             $push: { thumbups: username }
           });
-          res.send(1);
+          const withChanges4 = await Post.findById(postId)
+
+          res.status(200).json({type: 'up-vote', status: 'Not in but the other', downVotes: withChanges4.thumbdowns, upVotes: withChanges4.thumbups});
         } else if (!isNotInLike) {
           console.log("Allready In");
 
           const removeDislike = await post.updateOne({
             $pull: { thumbups: username }
           });
-          res.send(0);
+          const withChanges5 = await Post.findById(postId)
+          res.status(200).json({type: 'up-vote', status: 'Allready in', downVotes: withChanges5.thumbdowns, upVotes: withChanges5.thumbups});
         }
         break;
 
       default:
         console.log("Forbidden Request (Like/Dislike)");
-        res.send("0");
+        res.status(403).json({message: 'Forbidden Request!'})
         break;
     }
   } catch {
