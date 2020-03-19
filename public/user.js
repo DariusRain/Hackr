@@ -20,30 +20,32 @@ class PostCard {
     let postEl = document.createElement("p");
     let downVoteEl = document.createElement("button");
     let upVoteEl = document.createElement("button");
-    let dateEl = document.createElement("kbd")
-    main.className = 'div-article-main';
-    contentsLeft.className = 'div-article-content-left';
-    contentsRight.className = 'div-article-content-right';
-    downVoteEl.style = ' width: 100px; background-color: whitesmoke; color:#333333;'
-    upVoteEl.style = 'width: 100px; background-color:whitesmoke; color: #333333;'
-    dateEl.style = 'margin-top: 20px; width: 100px; font-style: italic;'
+    let dateEl = document.createElement("kbd");
+    main.className = "div-article-main";
+    contentsLeft.className = "div-article-content-left";
+    contentsRight.className = "div-article-content-right";
+    downVoteEl.style =
+      " width: 100px; background-color: whitesmoke; color:#333333;";
+    upVoteEl.style =
+      "width: 100px; background-color:whitesmoke; color: #333333;";
+    dateEl.style = "margin-top: 20px; color: #333333;width: 100px; font-style: italic;";
 
-    if(online){
-    userNameEl.innerText = `🌕 ${userName}`;
+    if (online) {
+      userNameEl.innerText = `🌕 ${userName}`;
     } else {
-      userNameEl.innerText = `🌑 ${userName}`
+      userNameEl.innerText = `🌑 ${userName}`;
     }
-    postDate = new Date(postDate)
-    postDate = postDate.toString().slice(0, 21)
-    userNameEl.style = 'margin-bottom: 12px; text-decoration: none; color: #66ff66;'
+    postDate = new Date(postDate);
+    postDate = postDate.toString().slice(0, 21);
+    userNameEl.style =
+      "margin-bottom: 12px; text-decoration: none; color: #66ff66;";
     postEl.innerText = `${postText}`;
     downVoteEl.innerText = `🔽 ${numOfDownVotes}`;
     upVoteEl.innerText = `🔼 ${numOfUpVotes}`;
-    dateEl.innerText = `${postDate}`
-
+    dateEl.innerText = `${postDate}`;
 
     downVoteEl.id = postId;
-    upVoteEl.id = postId
+    upVoteEl.id = postId;
     linkToGit.setAttribute("href", `https://www.github.com/${userName}`);
     imageEl.setAttribute("src", imageUrl);
 
@@ -57,16 +59,14 @@ class PostCard {
     contentsLeft.appendChild(downVoteEl);
 
     contentsRight.appendChild(postEl);
+    contentsRight.appendChild(dateEl)
     main.appendChild(contentsLeft);
     main.appendChild(contentsRight);
-    main.appendChild(dateEl)
+    
 
     return main;
   }
 }
-
-
-
 
 // Event listeners
 document
@@ -80,7 +80,7 @@ document.getElementById("logout_button").addEventListener("click", logout);
 const username = document.getElementById("username_text").innerText;
 
 // Xml Http Requests
-const fetchGitWithToken = (async () => {
+const fetchGitWithToken = async () => {
   let cookies = document.cookie;
   let convert = cookies.split(" ");
   const accessToken = convert[convert.length - 1].replace("AccessToken=", "");
@@ -126,12 +126,11 @@ const fetchGitWithToken = (async () => {
             div.style =
               "margin: 0 auto; margin-bottom: 20px; text-decoration: none; width:50%; border-style: solid; padding: 12px; word-break: break-all; background-color:whitesmoke;";
             number.innerText = ++count;
-            number.style =  "color: #3333333;";
+            number.style = "color: #3333333;";
 
             anchor.setAttribute("href", element.url);
             anchor.innerText = element.name;
-            anchor.style =
-              " color: #3333333; text-decoration: none;";
+            anchor.style = " color: #3333333; text-decoration: none;";
 
             horzBrkSt.style = "color:#66ff66;";
 
@@ -147,14 +146,11 @@ const fetchGitWithToken = (async () => {
       console.log("Error:", err);
     });
   return dataToGet;
-});
-fetchGitWithToken()
-
-
+};
+fetchGitWithToken();
 
 function createPost() {
   let post_text = document.getElementById("post_text").value.trim();
-
 
   return (async () => {
     const send = await fetch(window.location.href, {
@@ -183,12 +179,12 @@ function createPost() {
   })();
 }
 
-const getFeed = (async () => {
+const getFeed = async () => {
   try {
     const runFeed = await fetch(`http://localhost:5000/user/feed`);
     const json = await runFeed.json();
     let parent = document.getElementById("feed_div");
-    
+
     const display = json.reverse().map(postObj => {
       console.log(postObj);
       parent.appendChild(
@@ -207,9 +203,9 @@ const getFeed = (async () => {
   } catch {
     console.log("Error Displaying feed.");
   }
-});
+};
 
-getFeed()
+getFeed();
 async function logout() {
   try {
     const areYouSure = confirm("Continue logging out?");
@@ -223,9 +219,7 @@ async function logout() {
 }
 
 async function upVote() {
-
   try {
-
     const attemptingVote = await sendVote("up-vote", this);
   } catch {
     console.log("Error caught in function: upVote()");
@@ -241,15 +235,49 @@ async function downVote() {
 }
 
 async function sendVote(voteType, element) {
-  
+  console.log(element);
+  let upVoteArray;
+  let downVoteArray;
+  let upVoteButtonString;
+  let downVoteButtonString;
+  // The element is has the value of the button being pressed.
+  // The vote type only is used in the fetch function.
   try {
     const sendingVote = await fetch(`/user/vote/${voteType}/${element.id}`, {
       method: "PUT"
     });
-        location.reload(true)
+
+    const parseResponse = await sendingVote.json();
+    // location.reload(true)
+    console.log(parseResponse);
+
+    // Gettiung ready to structe the logic from the upvote & downvote arrays
+    // Will be handy later to show who liked.
+    upVoteArray = parseResponse.upVotes;
+    downVoteArray = parseResponse.downVotes;
+    upVoteButtonString = `🔼 ${upVoteArray.length}`;
+    downVoteButtonString = `🔽 ${downVoteArray.length}`;
+    // If the button has a previous sibling then that means it is the downvote button being pressed
+    // Becuase the previous would be the upvote button. Then vice versa for the other else statement.
   } catch {
     console.log("Error sending vote: sendVote()");
   }
+  console.log(1, element.nextSibling);
+
+  if (element.innerText.includes('🔼')) {
+    element.innerText = upVoteButtonString;
+    element.nextSibling.innerText = downVoteButtonString;
+  } else if (element.innerText.includes('🔽')) {
+    element.previousSibling.innerText = upVoteButtonString;
+    element.innerText = downVoteButtonString;
+  }
+  setTimeout(() => {
+    element.style.backgroundColor = "orange";
+  }, 0);
+
+  setTimeout(() => {
+    element.style.backgroundColor = "whitesmoke";
+  }, 300);
 }
 
 // Event Handlers
