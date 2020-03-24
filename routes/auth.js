@@ -7,9 +7,9 @@ router.get('/login', (req, res) => {
         title: 'Login'
     })
 })
-router.get('/oauth/authorize', passport.authenticate('github'))
+router.get('/authorize', passport.authenticate('github'))
 
-router.get('/oauth/token', passport.authenticate('github'), async (req, res) => {
+router.get('/token', passport.authenticate('github'), async (req, res) => {
     try {
     const userOnline = await User.findByIdAndUpdate(req.user._id, {$set: {online: true}})
 
