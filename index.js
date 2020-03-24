@@ -59,7 +59,7 @@ mongoose.connect(
   process.env.DB,
   { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },
   () => {
-    console.log(`Connected to Database: ${process.env.DB}`);
+    console.log(`Connected.`);
   }
 );
 

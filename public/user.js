@@ -235,7 +235,7 @@ function createPost() {
 }
 const getFeed = async () => {
   try {
-    const runFeed = await fetch(`http://localhost:5000/user/feed`);
+    const runFeed = await fetch(`https://${window.location.hostname}/user/feed`);
     const json = await runFeed.json();
     let feedDiv = document.getElementById("feed_div");
     let userPostsDiv = document.getElementById("recent_posts")
@@ -286,7 +286,7 @@ async function logout() {
   try {
     const areYouSure = confirm("Continue logging out?");
     if (areYouSure) {
-      const logoutAttempt = await fetch("http://localhost:5000/user/logout");
+      const logoutAttempt = await fetch(`https://${window.location.hostname}/user/logout`);
       location.assign("/");
     }
   } catch {
