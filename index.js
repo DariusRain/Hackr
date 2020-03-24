@@ -56,10 +56,10 @@ server.use("/", (req, res, next) => {
   res.render('errors', {  data: { message: "404 Not found" } });
 })
 mongoose.connect(
-  db,
+  process.env.DB,
   { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },
   () => {
-    console.log(`Connected to Database`);
+    console.log(`Connected to Database: ${process.env.DB}`);
   }
 );
 

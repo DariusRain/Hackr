@@ -1,7 +1,6 @@
 const express = require("express"),
   router = express.Router(),
   authCheck = require("./middleware/auth-check"),
-  request = require("superagent"),
   User = require("../models/user"),
   Post = require("../models/post")
 
@@ -41,8 +40,6 @@ router.get("/feed", authCheck, async (req, res) => {
       });
     });
 });
-
-
 
 
 router.put("/vote/:option/:postId", authCheck, async (req, res) => {

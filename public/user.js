@@ -28,13 +28,14 @@ class PostCard {
       " width: 100px; background-color: whitesmoke; color:#333333;";
     upVoteEl.style =
       "width: 100px; background-color:whitesmoke; color: #333333;";
-    dateEl.style = "margin-top: 20px; color: #333333;width: 100px; font-style: italic;";
+    dateEl.style = "margin-top: 20px; color: #66ff66; padding: 10px; width: 100%; font-style: italic;";
 
-    if (online) {
-      userNameEl.innerText = `🌕 ${userName}`;
-    } else {
-      userNameEl.innerText = `🌑 ${userName}`;
-    }
+    // if (online) {
+    //   userNameEl.innerText = `🌕 ${userName}`;
+    // } else {
+    //   userNameEl.innerText = `🌑 ${userName}`;
+    // }
+    userNameEl.innerText = `${userName}`;
     postDate = new Date(postDate);
     postDate = postDate.toString().slice(0, 21);
     userNameEl.style =
@@ -59,22 +60,75 @@ class PostCard {
     contentsLeft.appendChild(downVoteEl);
 
     contentsRight.appendChild(postEl);
-    contentsRight.appendChild(dateEl)
     main.appendChild(contentsLeft);
     main.appendChild(contentsRight);
-    
+    main.appendChild(dateEl)
+
 
     return main;
   }
 }
 
+class Article {
+  constructor(urlOrAuthor, content, description, date, nameOfNewsCompany, title, url, url2Image) {
+      let containerForArticle = document.createElement("div")
+      let articleTitle = document.createElement("a")
+      let articleContent = document.createElement("p")
+      let articleDescription = document.createElement("p")
+      let articleDate = document.createElement("p");
+      let articleNameOfNewsCompany = document.createElement("a")
+      let urlImage = document.createElement("img")
+      let articleAuthor = document.createElement("p")
+      containerForArticle.style = 'display: flex; flex-direction: column;  justify-content: space-evenly; color:whitesmoke; margin: 12px; padding: 8px; text-align: center;'
+      articleTitle.style = 'text-decoration: underline; font-size: 20px; font-weight: bold;'
+      articleDate.style = 'font-weight: bold;'
+      articleNameOfNewsCompany.style = 'font-style: italic;'
+      articleTitle.innerText = title 
+      // articleContent.innerText = `${content.slice(0, content.indexOf('.'))} ...`
+      articleDate.innerText = new Date(date);
+      articleDescription.innerText = description
+      articleNameOfNewsCompany.innerText = nameOfNewsCompany;
+
+
+      articleAuthor.innerText = `Author: ${urlOrAuthor}`;
+      const dotAllowed = ['.com', '.org', '.net', '.gov', '.edu', '.co.uk']
+      const check = dotAllowed.some(str => {  return nameOfNewsCompany.includes(str) })
+      if(check) {
+          articleNameOfNewsCompany.setAttribute("href", nameOfNewsCompany + "")
+      }
+      articleTitle.setAttribute("href", url)
+      urlImage.setAttribute("src", url2Image)
+      urlImage.style = ' width: 50vw; margin: 0 auto;'
+      containerForArticle.appendChild(urlImage)
+      containerForArticle.appendChild(articleTitle)
+      containerForArticle.appendChild(articleDate)
+      // containerForArticle.appendChild(articleContent)
+      containerForArticle.appendChild(articleDescription)
+      containerForArticle.appendChild(articleAuthor)
+      containerForArticle.appendChild(articleNameOfNewsCompany)
+      
+      return containerForArticle;
+  }
+}
+
+
+
+
 // Event listeners
 document
   .getElementById("profile_button")
   .addEventListener("click", showPostBox);
+
 document
   .getElementById("headline_button")
   .addEventListener("click", showHeadline);
+
+  document
+  .getElementById("post_cancel")
+  .addEventListener("click", showPostBox);
+document
+  .getElementById("recent_button")
+  .addEventListener("click", showRecentPosts);
 document.getElementById("submit_post").addEventListener("click", createPost);
 document.getElementById("logout_button").addEventListener("click", logout);
 const username = document.getElementById("username_text").innerText;
@@ -97,10 +151,11 @@ const fetchGitWithToken = async () => {
       const { bio, avatar_url, public_repos, url, repos_url, user } = data;
       //- console.log(bioText, avatarUrl, reposUrl, mainUrl)
       usernamez = user;
+      document.getElementById("avatar_profile_link").setAttribute("src", avatar_url);
       document.getElementById("avatar").setAttribute("src", avatar_url);
       document.getElementById(
         "num_repos"
-      ).innerText = `Repositories: ${public_repos}`;
+      ).innerText = public_repos;
       document.getElementById("bio_text").innerText = bio || null;
       return repos_url;
     })
@@ -124,7 +179,7 @@ const fetchGitWithToken = async () => {
             let horzBrkSt = document.createElement("hr");
 
             div.style =
-              "margin: 0 auto; margin-bottom: 20px; text-decoration: none; width:50%; border-style: solid; padding: 12px; word-break: break-all; background-color:whitesmoke;";
+              "margin: 0 auto; margin-bottom: 20px; text-decoration: none; width:50%; border-style: solid; padding: 12px; word-break: break-all;";
             number.innerText = ++count;
             number.style = "color: #3333333;";
 
@@ -178,16 +233,17 @@ function createPost() {
       });
   })();
 }
-
 const getFeed = async () => {
   try {
     const runFeed = await fetch(`http://localhost:5000/user/feed`);
     const json = await runFeed.json();
-    let parent = document.getElementById("feed_div");
-
-    const display = json.reverse().map(postObj => {
-      console.log(postObj);
-      parent.appendChild(
+    let feedDiv = document.getElementById("feed_div");
+    let userPostsDiv = document.getElementById("recent_posts")
+    let thisUser = document.getElementById("username_text").innerText;
+    let count = 0;
+    const loadAppendData = json.reverse().map(postObj => {
+      // console.log(postObj);
+      feedDiv.appendChild(
         new PostCard(
           postObj.avatar,
           postObj.user,
@@ -199,6 +255,24 @@ const getFeed = async () => {
           postObj._id
         )
       );
+
+      console.log(postObj.user, thisUser)
+      if  (postObj.user === thisUser && count < 7) {
+        console.log('777')
+        userPostsDiv.appendChild(
+          new PostCard(
+            postObj.avatar,
+            '',
+            postObj.post,
+            postObj.postDate,
+            postObj.online,
+            postObj.thumbups.length,
+            postObj.thumbdowns.length,
+            postObj._id
+          )
+        )
+        ++count;
+      }
     });
   } catch {
     console.log("Error Displaying feed.");
@@ -206,6 +280,8 @@ const getFeed = async () => {
 };
 
 getFeed();
+
+
 async function logout() {
   try {
     const areYouSure = confirm("Continue logging out?");
@@ -272,7 +348,7 @@ async function sendVote(voteType, element) {
     element.innerText = downVoteButtonString;
   }
   setTimeout(() => {
-    element.style.backgroundColor = "orange";
+    element.style.backgroundColor = "#66ff66";
   }, 0);
 
   setTimeout(() => {
@@ -292,9 +368,46 @@ function showHeadline() {
 
 function showPostBox() {
   let style = document.getElementById("post_form").style;
+  let body = document.getElementsByTagName("body")
+  console.log(body)
   if (style.display === "flex") {
     style.display = "none";
+    body[0].style.opacity = '1.0'
   } else {
     style.display = "flex";
+    body[0].style.opacity = '0.7'
+    window.scrollTo(0,0)
   }
 }
+
+function showRecentPosts() {
+  let style = document.getElementById("recent_posts").style;
+  if (style.display === "none") {
+    style.display = "flex";
+    window.scrollTo(0,0)
+
+  } else {
+    style.display = "none";
+  }
+}
+(async function showTrendingArticles() {
+  const date = new Date()
+  const todaysDate = date.toISOString().slice(0, 10)
+  console.log(todaysDate)
+  try {
+      const getTrendingNews = await fetch(`http://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=40719dcf9c6345b09c2bcaef4d00979e`)
+      const parsedJson = await getTrendingNews.json()
+      let amountText = document.getElementById("number-of-trending-articles") 
+      let count = 0;
+      let parent = document.getElementById("trending-articles-results")
+      const displayData = parsedJson.articles.map(object => {
+         const appended =  parent.appendChild(new Article(object.author || 'Anonymous', object.content || 'N/A' , object.description || 'N/A' , object.publishedAt || 'Anonymous' , object.source.name || 'Anonymous', object.title || 'No-title', object.url || '#', object.urlToImage || 'https://bit.ly/2Qi6yuZ'))
+          if (appended) {
+              ++count
+          }
+      })
+      amountText.innerText = count + ''
+  } catch {
+      console.log(" Error in 'showTrendingArticle()' ")
+  }
+})()

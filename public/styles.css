@@ -1,110 +1,119 @@
 * {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
-::-webkit-scrollbar {
+/* * ::-webkit-scrollbar {
   width: 10px;
-  opacity: 0.3;
+  
 
-}
+} */
 
 /* Track */
-::-webkit-scrollbar-track {
+/* * ::-webkit-scrollbar-track {
   box-shadow: inset 0 0 5px grey;
-  opacity: 0.3;
-}
+  
+} */
 
 /* Handle */
-::-webkit-scrollbar-thumb {
+/* * ::-webkit-scrollbar-thumb {
   background: whitesmoke;
-}
+} */
 
 
 
-.container-row {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  display: flex;
-  flex-direction: row;
-  padding: 10px;
-  width: 50%;
-  flex-wrap: wrap;
-  padding-top: 20px;
-  
-}
+
 .container-row-buttons {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  margin: 0 auto;
+  margin-top: 10%;
+  /* position: fixed; */
+  width: 10vw;
 }
 .container-column {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
   flex-direction: column;
 }
-.container-item-1 {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #333333;
-  text-align: center;
-  width: 100%;
-  padding:20px;
-}
 
-.whole-div {
+
+.whole-div  {
   display: flex;
   flex-direction: row;
- 
   flex-wrap: wrap;
-
-  margin: 0 auto;
+  overflow: auto;
+  margin-left: 50px;
+  width: 80vw;
+  float: right;
+  margin: 20px;
 }
+#side-pannel {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
 
+  width: 20vw;
+  
+  float: left;
+  overflow: auto;
+  
+}
+div#recent_posts {
+ margin: 0 !important; 
+}
+#recent_posts div {
+  width: 17vw;
+  margin: 20px;
+}
+#recent_posts img {
+  display: none;
+}
+#recent_posts {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  height: 60vh;
+  width: 25vw;
+  overflow: auto;
+
+}
 .left-side-flex {
   display: flex;
   flex-direction: column;
-  width: 88vw;
-  height: 86vh;
+  width: 60vw;
+  height: 100vh;
   margin: 0 auto;
-  margin-bottom: 100px;
 }
 
 
 .middle-page-flex {
   display: flex;
   flex-direction: column;
-  width: 88vw;
   margin: 0 auto;
-  margin-bottom: 20px;
+  width: 60vw;
+  height: 100vh;
 }
 
 
 .right-side-flex {
   display: flex;
   flex-direction: column;
-  width: 88vw;
   margin: 0 auto;
 }
-div.div-article-main div {
+/* div.div-article-main div {
   margin: 20px;
-}
+} */
 div.container-row-buttons {
-  width: 50%;
   justify-content: space-evenly;
 }
-div.box-banner {
-  background-color: #66ff66;
-}
+
 .buttons {
   padding: 8px;
-  margin: 0 auto;
   margin-bottom: 12px;
   margin-right: 5px;
-  background-color: whitesmoke;
   box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.302),
     0 2px 6px 2px rgba(60, 64, 67, 0.149);
   border-style: none;
-  
-  color: #333333;
 
   
 }
@@ -118,46 +127,46 @@ div.box-banner {
 .buttons:hover {
   color: #66ff66;
 }
-div.container-item-1 {
-  background-color: #66ff66;
-  border: #333333 solid 2px;
-}
-div.container-item-1 a {
-  color: #333333 !important;
-}
+
+
 
 
 #headline {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-color: whitesmoke;
-  color: #333333;
-  width: 88%;
+  background-color: #333333;
+  color: whitesmoke;
   margin: 0 auto;
   text-align: center;
   display: none;
-  padding: 50px;
-  height: 25vh;
-  margin-bottom: 20px;
-  font-size: x-large;
-}
 
+}
+div#headline {
+  height: 100%;
+  padding: 50px;
+}
 #list_repos div {
   box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.302),
     0 2px 6px 2px rgba(60, 64, 67, 0.149);
   border-style: none !important;
   width: 100%;
-  background-color: #66ff66;
   text-align: center;
+  padding: 20px;
+  background-color: #333333 !important;
+  color: whitesmoke;
 }
 
+#list_repos a {
+  color: #66ff66;
+  font-weight: bolder;
+}
 h5#num_repos {
   color: #66ff66;
+
 }
 h3#username_text {
   color: #66ff66;
 }
 #u_name_anchor {
-  font-size: 40px;
   color: #66ff66;
 }
 #list_repos {
@@ -165,11 +174,14 @@ h3#username_text {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
+  text-align: center !important;
+
 }
 
 button {
-  font-weight: 700;
-
+  background-color: #333333;
+  color: whitesmoke;
+  font-weight: 600;
   box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.302),
     0 2px 6px 2px rgba(60, 64, 67, 0.149);
   border-style: none !important;
@@ -178,36 +190,45 @@ button {
 #post_form {
   display: none;
   flex-direction: column;
-  margin: 0 auto;
   box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.302),
     0 2px 6px 2px rgba(60, 64, 67, 0.149);
-  margin-bottom: 60px;
-  width: 70%;
   
-  opacity: 0.9;
-  margin-top: 12px;
+  border: solid 2px #66ff66;
+  position: fixed;  
+  width: 60vw;
+  top: 25%;
+  right: 20%;
+
 }
 #post{
   background-color: whitesmoke !important;
+  padding: 30px;
 
 }
 h3#post_form {
   box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.302),
     0 2px 6px 2px rgba(60, 64, 67, 0.149);
+
 }
 #post_form textarea {
   color: #333333;
   background-color: #66ff66;
+  width: 50%;
+  margin: 0 auto;
+  font-size: xx-large;
 }
 
 .box-banner {
-  color: #333333;
+  color: #66ff66;
   
   text-align: center;
 }
+div.box-banner {
+  background-color: #333333;
+}
 
 header img {
-  height: 30px;
+  height: 3vh;
 }
 textarea#post_text {
   margin: 25px;
@@ -218,12 +239,19 @@ color: whitesmoke;
   
 }
 
+#trending-articles-results {
+  overflow: auto;
+  height: 100vh;
+  width: 60vw;
+  margin: 0 auto;
+}
 .profile-section {
   margin: 12px;
+    
 }
 
 #avatar {
-  width: 120px;
+  width: 20vw;
 
   
 
@@ -231,27 +259,20 @@ color: whitesmoke;
 
 h5#bio_text {
   color: whitesmoke;
-
-}
-div#profile_box.container-row {
   text-align: center;
-  padding: 12px;
+  
 }
-div#profile_box.container-row {
-  width: 100%;
-}
+
 
 #github_icon {
-  
-  margin: 0 auto;
-  width: 40px;
+    width: 4vw;
 }
 #footer {
   text-align: center;
   margin: 0 auto;
   color: #333333;
   background-color: black;
-  opacity: 0.7;
+  
 }
 #login {
   margin: 0 auto;
@@ -261,10 +282,10 @@ div#profile_box.container-row {
 }
 #jumbo {
   color: #333333;
-  padding: 12px;
+  padding: 50px;
   margin: 12px;
   text-align: center;
-    opacity: 0.8;
+    
   background-color: black;
 }
 
@@ -292,17 +313,19 @@ div#profile_box.container-row {
   color: #66ff66 !important;
   box-shadow: 1px 2px 0 rgba(60, 64, 67, 0.302),
     0 2px 6px 2px rgba(60, 64, 67, 0.149);
-  opacity: 0.9;
+  
   
 }
 
 .div-article-avatar {
-  width: 120px;
+  width: 10vw;
 }
 
 body {
   background-color: #333333 !important;
-  
+  /* margin-left: 50px !important;
+  margin-right: 50px !important;
+  padding: 100px; */
 }
 .div-article-content-left {
   display: flex;
@@ -310,16 +333,16 @@ body {
   flex-direction: column;
   width: 10vw;
   margin-bottom: 12px;
-  height: 20vh;
 
 }
 
 .div-article-content-left button {
-  width: 100%;
+  /* width: 100%; */
+  width: 10vw;
 }
 
 .div-article-content-left img {
-  width: 120px;
+  width: 10vw;
 }
 
 .div-article-content-right {
@@ -329,10 +352,8 @@ body {
   border-width: 2px;
   background-color: whitesmoke;
   border-color: #66ff66;
-  width: 70vw;
-  height: 15vh;
-  
-  overflow: auto;
+  width: 100%;
+    
 }
 
 .div-article-content-right p {
@@ -340,27 +361,20 @@ body {
   text-align: center;
   color: #333333;
   margin: 0 auto;
-  word-break: break-word;
-  padding: 20px;
-  font-size: x-large;
   font-weight: bolder;
+  padding: 10px;
+  overflow: auto;
+  height: 10vh;
+  
 }
 
 
-h3.article-username {
+/* h3.article-username {
   
   margin: 0;
   padding: 0;
-  font-size: 20px;
-}
-p.article-message {
-  width: 100%;
-}
-
-
-hr {
-  display: none;
-}
+} */
+/* 
 .div-article-name-pic {
   display: flex;
   flex-direction: column;
@@ -376,9 +390,9 @@ hr {
   padding: 10px;
   color: #66ff66;
 
-}
+} */
 
-.article-link {
+/* .article-link {
   text-decoration: none;
   text-align: center;
 }
@@ -389,18 +403,15 @@ hr {
   width: 70px;
   border-style: solid;
 }
-.article-username {
-  font-size: 30px;
-}
+
 .article-vote {
   font-weight: bold;
   font-style: oblique;
-  font-size: 20px;
   text-decoration: none;
   margin: 0 auto;
   color: black;
   background-color: #66ff66;
-}
+} */
 
 div#feed_div {
   margin: 0 auto;
