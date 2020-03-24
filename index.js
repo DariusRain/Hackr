@@ -47,7 +47,7 @@ server.use(express.urlencoded({extended: false}))
 
 server.use("/", home);
 server.use("/user", user);
-server.use('/auth', auth)
+server.use('/oauth', auth)
 
 
 
