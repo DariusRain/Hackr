@@ -18,6 +18,7 @@ router.get("/profile/:username", authCheck, async (req, res) => {
       });
   }
     catch {
+      console.log('Here', req.user)
       return res.status(500).json({
 
         message: "Internal Server Error!"
