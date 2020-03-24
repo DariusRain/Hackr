@@ -13,7 +13,7 @@ router.get('/token', passport.authenticate('github'), async (req, res) => {
     try {
     const userOnline = await User.findByIdAndUpdate(req.user._id, {$set: {online: true}})
 
-    res.cookie("AccessToken", req.user.accessToken).redirect(`../../user/profile/${req.user.username}`)
+    res.cookie("AccessToken", req.user.accessToken).redirect(`../user/profile/${req.user.username}`)
     }
     catch {
 
