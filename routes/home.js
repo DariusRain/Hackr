@@ -3,7 +3,7 @@ const express = require('express'),
 
 
 router.get('/', (req, res) => {
-    res.redirect('/auth/login')
+    res.redirect('/oauth/login')
     
 })
 
