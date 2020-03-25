@@ -9,7 +9,7 @@ const express = require("express"),
   auth = require('./routes/auth'),
   passport = require('passport'),
   cookieSession = require('cookie-session'),
-  passportSetup = require('./config/passport-setup'),
+  passportSetup = require('./config/passport-setup');
   // volleyball = require('volleyball');
 
 
