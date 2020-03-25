@@ -235,7 +235,7 @@ function createPost() {
 }
 const getFeed = async () => {
   try {
-    const runFeed = await fetch(`https://${window.location.hostname}/user/feed`);
+    const runFeed = await fetch(`${location.href}/../../../user/feed`);
     const json = await runFeed.json();
     let feedDiv = document.getElementById("feed_div");
     let userPostsDiv = document.getElementById("recent_posts")
@@ -286,9 +286,9 @@ async function logout() {
   try {
     const areYouSure = confirm("Continue logging out?");
     if (areYouSure) {
-      const logoutAttempt = await fetch(`https://${window.location.hostname}/user/logout`);
+      const logoutAttempt = await fetch(`${location.href}/user/logout`);
       location.assign("/");
-    }
+    }k
   } catch {
     console.log("No logging out going on here buddy!");
   }
