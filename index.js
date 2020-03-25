@@ -10,7 +10,7 @@ const express = require("express"),
   passport = require('passport'),
   cookieSession = require('cookie-session'),
   passportSetup = require('./config/passport-setup'),
-  volleyball = require('volleyball');
+  // volleyball = require('volleyball');
 
 
 // Express Application @server
@@ -25,7 +25,7 @@ server.use(express.static("public"));
 
 // Cors package & volleyball - to see requests in the console.
 server.use(cors())
-server.use(volleyball)
+// server.use(volleyball)
 
 //  Stores a cookie as a session for a day
 server.use(cookieSession({
