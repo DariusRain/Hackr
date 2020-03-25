@@ -8,6 +8,7 @@ router.get("/profile/:username", authCheck, async (req, res) => {
   
   try {
  const user =  await User.findOne({ user: req.params.username })
+ console.log(user)
  if(!req.user.online) {
    const changeToOnline = await user.update({$set:  {online:true} })
  }
