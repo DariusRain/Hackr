@@ -5,7 +5,7 @@
 module.exports = (req, res, next) => {
     if(!req.user){
         //If User not logged in it redirects the response back to login with github.
-        res.redirect('../../oauth/login')
+        res.redirect('../../auth/login')
     }else {
         //Contitnue to the next handlers
 
