@@ -199,7 +199,7 @@ router.get("/logout", authCheck, async (req, res) => {
   try {
     const user = await User.findOne({ user: req.user.user});
     const userNotOnline = await user.update({$set: {online:false}})
-    req.logout();
+    req.logout()
     res.redirect("/");
   } catch {
     res.status(403).render('errors', { message: "Forbidden" });

@@ -286,7 +286,7 @@ async function logout() {
   try {
     const areYouSure = confirm("Continue logging out?");
     if (areYouSure) {
-      const logoutAttempt = await fetch(`${location.href}/user/logout`);
+      const logoutAttempt = await fetch(`${location.href}/../../../user/logout`);
       location.assign("/");
     }k
   } catch {
