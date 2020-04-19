@@ -37,7 +37,7 @@ passport.use(
         //See http://www.passportjs.org/packages/passport-github/ 
         clientID : process.env.CLI_ID_GIT,
         clientSecret : process.env.CLI_SEC_GIT,
-        callBackURL: 'https://mysterious-dawn-79112.herokuapp.com/auth/github/callback'
+        callBackURL: 'https://hackr-project.herokuapp.com//auth/github/callback'
     }, 
     //This asynchronous function verifies if the user has been allready stored in the database if not then it will call the next
     //call back function in order which in this case it is called "done" sort of like the "next" call back function for middleware.
