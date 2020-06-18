@@ -18,8 +18,8 @@ router.get("/profile/:username", authCheck, async (req, res) => {
         }
       });
   }
-    catch {
-      console.log('Here', req.user)
+    catch (err) {
+      console.error(err);
       return res.status(500).json({
 
         message: "Internal Server Error!"
@@ -37,6 +37,7 @@ router.get("/feed", authCheck, async (req, res) => {
       return res.status(200).send(result);
     })
     .catch(err => {
+      console.error(err);
       return res.status(500).json({
         message: "Unable to obtain feed data."
       });
@@ -200,9 +201,9 @@ router.get("/logout", authCheck, async (req, res) => {
     const user = await User.findOne({ user: req.user.user});
     const userNotOnline = await user.update({$set: {online:false}})
     req.logout()
-    res.redirect("/");
+    return res.redirect("/");
   } catch {
-    res.status(403).render('errors', { message: "Forbidden" });
+    return res.status(403).render('errors', { message: "Forbidden" });
   }
 });
 
@@ -215,12 +216,12 @@ router.post('/post-it', async (req, res) => {
   });
 
   try {
-    const savedPost = newPost.save();
-      res.json(savedPost)
+    const savedPost = newPost.create(savedPost);
+      return res.json(savedPost)
   }
   catch (err) {
-    res.json(err)
-    console.log(err)
+    console.error(err)
+    return res.json(err)
   }
 })
 

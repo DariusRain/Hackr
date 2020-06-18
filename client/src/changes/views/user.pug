@@ -1,0 +1,75 @@
+
+extends index.pug
+
+block head
+  script(src="../../user.js" defer)
+   
+block content
+
+  div(id="side-pannel" style=" text-align: center; padding: 20px")
+        div(style="margin: 0 auto;")
+          a(href="#" id="profile_public_anchor", style="text-decoration: none; font-size: x-large; color: #66ff66;") 
+            img(alt="Public Profile", id="avatar_profile_link", style=" width: 7vw; border-radius: 100%;") 
+            br
+            span(style="font-size: 100%; text-decoration: underline; word-break:break-word;" id="username") #{data.username.user}
+            br
+            br
+          div(class="container-row-buttons" style="margin: 0 auto;")
+            button(class="buttons" id="profile_button") Post to Board 
+            button(class="buttons" id="recent_button") My Recent Posts
+            button(class="buttons") Settings
+            button(class="buttons" id="headline_button") Today's Headlines
+            button(class="buttons" id="logout_button") Logout
+          div(id="recent_posts" style="display: none; width: 100%;")
+  div(class="whole-div")
+    br
+    br
+   
+    div(id="headline")
+      p. 
+        Welcome to hackr (Development version v1.0.3) 
+        Now configuring Oauth to appplication (Almost at stable release)
+      .articles-section
+      div
+        h2
+          | Trending Articles
+          br
+          span#number-of-trending-articles(style='background-color: #333333;  padding: 5px; color: #66ff66;')
+      #trending-articles-results
+
+    div(class="left-side-flex")
+      div(class="box-banner")
+        img(alt="github icon" id="github_icon" src="https://www.shareicon.net/data/256x256/2015/08/29/92741_feed_512x512.png", style="opacity: 0.5 !important;")  
+      div(id="post_form")
+        div(class="box-banner" style="")
+          span(class="cancel" id="post_cancel" style="color:red; font-size: large; cursor: pointer; float: right; border-bottom-left-radius: 5px;   font-weight: bolder; text-align: center; background-color: whitesmoke; padding: 10px;") ✖
+          br
+          h3(style="font-size: 20px;") Post to board  
+
+          div(id="post")
+            textarea(id="post_text",name="text", type="text")
+            br
+            button(id="submit_post", class="buttons-post") Post
+      div(style="height: 100vh; overflow: auto;")
+        div(id="feed_div")
+
+    div(class="middle-page-flex")
+      div(id="profile_box")
+        div(class="box-banner")
+          img(alt="github icon" id="github_icon" src="https://cdn.iconscout.com/icon/free/png-256/github-1693585-1442626.png")    
+      div(style="  height: 100vh; overflow: auto;")
+        div(class="profile-section")
+          a(id="u_name_anchor")           
+            img(alt="Photo of user", id="avatar") 
+          h3(id="username_text") #{data.username.user}      
+          br
+          h5(id="bio_text")
+          hr
+          h5(style="color: whitesmoke") Number Of Repositories: 
+            span(id="num_repos" style="color:#66ff66")
+          hr
+          div(id="list_repos")
+          br
+
+
+
