@@ -55,7 +55,7 @@ passport.use(
         await User.findOne({gitid: profile.id}).then(user => {
         
             if(!user){
-            const user = newUser.save()
+            const user = User.create(newUser);
             let temp = {}
             temp.accessToken = accessToken
             temp.refreshToken = refreshToken
