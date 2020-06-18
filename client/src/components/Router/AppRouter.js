@@ -1,20 +1,22 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Home from "../Home/Home";
 import Login from "../Login/Login";
+import Navbar from "../Navbar/Navbar";
 
 function index() {
   return (
     <Router>
-    <Switch>
-      <Route exact path="/">
+      <Navbar />
+      <Switch>
+        <Route exact path="/">
           <Home />
-      </Route>
-      <Route path="/login">
+        </Route>
+        <Route path="/login">
           <Login />
-      </Route>
-    </Switch>
-  </Router>
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 export default index;
