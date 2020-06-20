@@ -1,9 +1,21 @@
+.item-middle {
+  margin: "0 auto";
+}
+.text-center {
+  text-align: center;
+}
+
+.no-decoration {
+  text-decoration: none;
+}
+
 .login {
   display: flex;
   flex-direction:column;
   padding:3rem;
   background-color:whitesmoke;
 }
+
 body {
   background-color: whitesmoke;
 }
@@ -29,4 +41,9 @@ background-color: whitesmoke;
 
 .navbar-side {
   flex: 8
+}
+
+.menu-text {
+  float: right;
+  font-size: 1rem;
 }

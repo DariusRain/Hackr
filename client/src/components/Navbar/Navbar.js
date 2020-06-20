@@ -8,7 +8,9 @@ function Navbar() {
         <Logo />
       </NavLink>
       <div className="navbar-side">
-        <NavLink to="/login">Login/Sign-Up</NavLink>
+        <NavLink to="/login">
+          <span className="menu-text">Login/Sign-Up</span>
+        </NavLink>
       </div>
     </div>
   );
