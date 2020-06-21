@@ -32,11 +32,11 @@ passport.use(
     {
       //Options
       //Add your Github OAuth App information in the proper feilds.
-      //See https://github.com/settings/developers > Create Oauth App if you havent, after doing so you will recoginize the proper feilds.
+      //See https://github.com/settings/developers > Create Oauth App if you havent, after doing so you will recoginize the proper fields.
       //See http://www.passportjs.org/packages/passport-github/
       clientID: process.env.CLI_ID_GIT,
       clientSecret: process.env.CLI_SEC_GIT,
-      callBackURL: "https://hackr-project.herokuapp.com/auth/github/callback",
+      callBackURL: `${process.env.API_ROOT}/auth/github/callback`,
     },
 
     //This verifies if the user has been allready stored in the database if not then it will call the next
