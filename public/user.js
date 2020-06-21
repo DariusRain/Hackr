@@ -28,7 +28,8 @@ class PostCard {
       " width: 100px; background-color: whitesmoke; color:#333333;";
     upVoteEl.style =
       "width: 100px; background-color:whitesmoke; color: #333333;";
-    dateEl.style = "margin-top: 20px; color: #66ff66; padding: 10px; width: 100%; font-style: italic;";
+    dateEl.style =
+      "margin-top: 20px; color: #66ff66; padding: 10px; width: 100%; font-style: italic;";
 
     // if (online) {
     //   userNameEl.innerText = `🌕 ${userName}`;
@@ -62,57 +63,65 @@ class PostCard {
     contentsRight.appendChild(postEl);
     main.appendChild(contentsLeft);
     main.appendChild(contentsRight);
-    main.appendChild(dateEl)
-
+    main.appendChild(dateEl);
 
     return main;
   }
 }
 
 class Article {
-  constructor(urlOrAuthor, content, description, date, nameOfNewsCompany, title, url, url2Image) {
-      let containerForArticle = document.createElement("div")
-      let articleTitle = document.createElement("a")
-      let articleContent = document.createElement("p")
-      let articleDescription = document.createElement("p")
-      let articleDate = document.createElement("p");
-      let articleNameOfNewsCompany = document.createElement("a")
-      let urlImage = document.createElement("img")
-      let articleAuthor = document.createElement("p")
-      containerForArticle.style = 'display: flex; flex-direction: column;  justify-content: space-evenly; color:whitesmoke; margin: 12px; padding: 8px; text-align: center;'
-      articleTitle.style = 'text-decoration: underline; font-size: 20px; font-weight: bold;'
-      articleDate.style = 'font-weight: bold;'
-      articleNameOfNewsCompany.style = 'font-style: italic;'
-      articleTitle.innerText = title 
-      // articleContent.innerText = `${content.slice(0, content.indexOf('.'))} ...`
-      articleDate.innerText = new Date(date);
-      articleDescription.innerText = description
-      articleNameOfNewsCompany.innerText = nameOfNewsCompany;
+  constructor(
+    urlOrAuthor,
+    content,
+    description,
+    date,
+    nameOfNewsCompany,
+    title,
+    url,
+    url2Image
+  ) {
+    let containerForArticle = document.createElement("div");
+    let articleTitle = document.createElement("a");
+    let articleContent = document.createElement("p");
+    let articleDescription = document.createElement("p");
+    let articleDate = document.createElement("p");
+    let articleNameOfNewsCompany = document.createElement("a");
+    let urlImage = document.createElement("img");
+    let articleAuthor = document.createElement("p");
+    containerForArticle.style =
+      "display: flex; flex-direction: column;  justify-content: space-evenly; color:whitesmoke; margin: 12px; padding: 8px; text-align: center;";
+    articleTitle.style =
+      "text-decoration: underline; font-size: 20px; font-weight: bold;";
+    articleDate.style = "font-weight: bold;";
+    articleNameOfNewsCompany.style = "font-style: italic;";
+    articleTitle.innerText = title;
+    // articleContent.innerText = `${content.slice(0, content.indexOf('.'))} ...`
+    articleDate.innerText = new Date(date);
+    articleDescription.innerText = description;
+    articleNameOfNewsCompany.innerText = nameOfNewsCompany;
 
+    articleAuthor.innerText = `Author: ${urlOrAuthor}`;
+    const dotAllowed = [".com", ".org", ".net", ".gov", ".edu", ".co.uk"];
+    const check = dotAllowed.some((str) => {
+      return nameOfNewsCompany.includes(str);
+    });
+    if (check) {
+      articleNameOfNewsCompany.setAttribute("href", nameOfNewsCompany + "");
+    }
+    articleTitle.setAttribute("href", url);
+    urlImage.setAttribute("src", url2Image);
+    urlImage.style = " width: 50vw; margin: 0 auto;";
+    containerForArticle.appendChild(urlImage);
+    containerForArticle.appendChild(articleTitle);
+    containerForArticle.appendChild(articleDate);
+    // containerForArticle.appendChild(articleContent)
+    containerForArticle.appendChild(articleDescription);
+    containerForArticle.appendChild(articleAuthor);
+    containerForArticle.appendChild(articleNameOfNewsCompany);
 
-      articleAuthor.innerText = `Author: ${urlOrAuthor}`;
-      const dotAllowed = ['.com', '.org', '.net', '.gov', '.edu', '.co.uk']
-      const check = dotAllowed.some(str => {  return nameOfNewsCompany.includes(str) })
-      if(check) {
-          articleNameOfNewsCompany.setAttribute("href", nameOfNewsCompany + "")
-      }
-      articleTitle.setAttribute("href", url)
-      urlImage.setAttribute("src", url2Image)
-      urlImage.style = ' width: 50vw; margin: 0 auto;'
-      containerForArticle.appendChild(urlImage)
-      containerForArticle.appendChild(articleTitle)
-      containerForArticle.appendChild(articleDate)
-      // containerForArticle.appendChild(articleContent)
-      containerForArticle.appendChild(articleDescription)
-      containerForArticle.appendChild(articleAuthor)
-      containerForArticle.appendChild(articleNameOfNewsCompany)
-      
-      return containerForArticle;
+    return containerForArticle;
   }
 }
-
-
-
 
 // Event listeners
 document
@@ -123,9 +132,7 @@ document
   .getElementById("headline_button")
   .addEventListener("click", showHeadline);
 
-  document
-  .getElementById("post_cancel")
-  .addEventListener("click", showPostBox);
+document.getElementById("post_cancel").addEventListener("click", showPostBox);
 document
   .getElementById("recent_button")
   .addEventListener("click", showRecentPosts);
@@ -141,37 +148,37 @@ const fetchGitWithToken = async () => {
   const dataToGet = await fetch("https://api.github.com/user", {
     headers: {
       Authorization: `token ${accessToken}`,
-      "User-Agent": "https:www.github.com/DariusRain"
-    }
+      "User-Agent": "https:www.github.com/DariusRain",
+    },
   })
-    .then(data => {
+    .then((data) => {
       return data.json();
     })
-    .then(data => {
+    .then((data) => {
       const { bio, avatar_url, public_repos, url, repos_url, user } = data;
       //- console.log(bioText, avatarUrl, reposUrl, mainUrl)
       usernamez = user;
-      document.getElementById("avatar_profile_link").setAttribute("src", avatar_url);
+      document
+        .getElementById("avatar_profile_link")
+        .setAttribute("src", avatar_url);
       document.getElementById("avatar").setAttribute("src", avatar_url);
-      document.getElementById(
-        "num_repos"
-      ).innerText = public_repos;
+      document.getElementById("num_repos").innerText = public_repos;
       document.getElementById("bio_text").innerText = bio || null;
       return repos_url;
     })
-    .then(reposUrl => {
+    .then((reposUrl) => {
       return fetch(reposUrl)
-        .then(data => {
+        .then((data) => {
           return data.json();
         })
-        .then(data => {
+        .then((data) => {
           let parent = document.getElementById("list_repos");
           let count = 0;
-          const mappedResponse = data.map(element => {
+          const mappedResponse = data.map((element) => {
             return { url: element.html_url, name: element.name };
           });
           console.log(mappedResponse);
-          mappedResponse.forEach(element => {
+          mappedResponse.forEach((element) => {
             let div = document.createElement("div");
             let number = document.createElement("h5");
             let anchor = document.createElement("a");
@@ -197,7 +204,7 @@ const fetchGitWithToken = async () => {
           });
         });
     })
-    .catch(err => {
+    .catch((err) => {
       console.log("Error:", err);
     });
   return dataToGet;
@@ -212,23 +219,23 @@ function createPost() {
       method: "POST",
       headers: {
         Accept: "application/json",
-        "content-type": "application/json"
+        "content-type": "application/json",
       },
       body: JSON.stringify({
         user: document.getElementById("username_text").innerText,
         avatar: document.getElementById("avatar").getAttribute("src"),
         post: post_text,
-        postDate: new Date()
-      })
+        postDate: new Date(),
+      }),
     })
-      .then(response => {
+      .then((response) => {
         return response.json();
       })
-      .then(response => {
+      .then((response) => {
         alert(response.message);
         window.location.reload();
       })
-      .catch(err => {
+      .catch((err) => {
         alert(err.message);
       });
   })();
@@ -238,10 +245,10 @@ const getFeed = async () => {
     const runFeed = await fetch(`${location.href}/../../../user/feed`);
     const json = await runFeed.json();
     let feedDiv = document.getElementById("feed_div");
-    let userPostsDiv = document.getElementById("recent_posts")
+    let userPostsDiv = document.getElementById("recent_posts");
     let thisUser = document.getElementById("username_text").innerText;
     let count = 0;
-    const loadAppendData = json.reverse().map(postObj => {
+    const loadAppendData = json.reverse().map((postObj) => {
       // console.log(postObj);
       feedDiv.appendChild(
         new PostCard(
@@ -256,13 +263,13 @@ const getFeed = async () => {
         )
       );
 
-      console.log(postObj.user, thisUser)
-      if  (postObj.user === thisUser && count < 7) {
-        console.log('777')
+      console.log(postObj.user, thisUser);
+      if (postObj.user === thisUser && count < 7) {
+        console.log("777");
         userPostsDiv.appendChild(
           new PostCard(
             postObj.avatar,
-            '',
+            "",
             postObj.post,
             postObj.postDate,
             postObj.online,
@@ -270,7 +277,7 @@ const getFeed = async () => {
             postObj.thumbdowns.length,
             postObj._id
           )
-        )
+        );
         ++count;
       }
     });
@@ -281,14 +288,16 @@ const getFeed = async () => {
 
 getFeed();
 
-
 async function logout() {
   try {
     const areYouSure = confirm("Continue logging out?");
     if (areYouSure) {
-      const logoutAttempt = await fetch(`${location.href}/../../../user/logout`);
+      const logoutAttempt = await fetch(
+        `${location.href}/../../../user/logout`
+      );
       location.assign("/");
-    }k
+    }
+    k;
   } catch {
     console.log("No logging out going on here buddy!");
   }
@@ -320,7 +329,7 @@ async function sendVote(voteType, element) {
   // The vote type only is used in the fetch function.
   try {
     const sendingVote = await fetch(`/user/vote/${voteType}/${element.id}`, {
-      method: "PUT"
+      method: "PUT",
     });
 
     const parseResponse = await sendingVote.json();
@@ -340,10 +349,10 @@ async function sendVote(voteType, element) {
   }
   console.log(1, element.nextSibling);
 
-  if (element.innerText.includes('🔼')) {
+  if (element.innerText.includes("🔼")) {
     element.innerText = upVoteButtonString;
     element.nextSibling.innerText = downVoteButtonString;
-  } else if (element.innerText.includes('🔽')) {
+  } else if (element.innerText.includes("🔽")) {
     element.previousSibling.innerText = upVoteButtonString;
     element.innerText = downVoteButtonString;
   }
@@ -368,15 +377,15 @@ function showHeadline() {
 
 function showPostBox() {
   let style = document.getElementById("post_form").style;
-  let body = document.getElementsByTagName("body")
-  console.log(body)
+  let body = document.getElementsByTagName("body");
+  console.log(body);
   if (style.display === "flex") {
     style.display = "none";
-    body[0].style.opacity = '1.0'
+    body[0].style.opacity = "1.0";
   } else {
     style.display = "flex";
-    body[0].style.opacity = '0.7'
-    window.scrollTo(0,0)
+    body[0].style.opacity = "0.7";
+    window.scrollTo(0, 0);
   }
 }
 
@@ -384,30 +393,42 @@ function showRecentPosts() {
   let style = document.getElementById("recent_posts").style;
   if (style.display === "none") {
     style.display = "flex";
-    window.scrollTo(0,0)
-
+    window.scrollTo(0, 0);
   } else {
     style.display = "none";
   }
 }
 (async function showTrendingArticles() {
-  const date = new Date()
-  const todaysDate = date.toISOString().slice(0, 10)
-  console.log(todaysDate)
+  const date = new Date();
+  const todaysDate = date.toISOString().slice(0, 10);
+  console.log(todaysDate);
   try {
-      const getTrendingNews = await fetch(`http://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=40719dcf9c6345b09c2bcaef4d00979e`)
-      const parsedJson = await getTrendingNews.json()
-      let amountText = document.getElementById("number-of-trending-articles") 
-      let count = 0;
-      let parent = document.getElementById("trending-articles-results")
-      const displayData = parsedJson.articles.map(object => {
-         const appended =  parent.appendChild(new Article(object.author || 'Anonymous', object.content || 'N/A' , object.description || 'N/A' , object.publishedAt || 'Anonymous' , object.source.name || 'Anonymous', object.title || 'No-title', object.url || '#', object.urlToImage || 'https://bit.ly/2Qi6yuZ'))
-          if (appended) {
-              ++count
-          }
-      })
-      amountText.innerText = count + ''
+    const getTrendingNews = await fetch(
+      `http://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=6017031fdb37416997959671d521b753`
+    );
+    const parsedJson = await getTrendingNews.json();
+    let amountText = document.getElementById("number-of-trending-articles");
+    let count = 0;
+    let parent = document.getElementById("trending-articles-results");
+    const displayData = parsedJson.articles.map((object) => {
+      const appended = parent.appendChild(
+        new Article(
+          object.author || "Anonymous",
+          object.content || "N/A",
+          object.description || "N/A",
+          object.publishedAt || "Anonymous",
+          object.source.name || "Anonymous",
+          object.title || "No-title",
+          object.url || "#",
+          object.urlToImage || "https://bit.ly/2Qi6yuZ"
+        )
+      );
+      if (appended) {
+        ++count;
+      }
+    });
+    amountText.innerText = count + "";
   } catch {
-      console.log(" Error in 'showTrendingArticle()' ")
+    console.log(" Error in 'showTrendingArticle()' ");
   }
-})()
+})();

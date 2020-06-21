@@ -4,7 +4,7 @@ import Home from "../Home/Home";
 import Login from "../Login/Login";
 import Navbar from "../Navbar/Navbar";
 
-function index() {
+function AppRouter() {
   return (
     <Router>
       <Navbar />
@@ -15,8 +15,18 @@ function index() {
         <Route path="/login">
           <Login />
         </Route>
+        <Route
+          exact
+          path="/auth/github"
+          component={() => {
+            window.location.href = `${apiRoot}/auth/github`;
+            return null;
+          }}
+        />
       </Switch>
     </Router>
   );
 }
-export default index;
+export default AppRouter;
+
+
