@@ -20,10 +20,14 @@ passport.serializeUser((user, done) => {
 //Deserialize cookie
 //This method inherits from the browser cookie storage
 
-passport.deserializeUser((user, done) => {
-  User.findById(user.id).then((user) => {
-    done(null, user);
-  });
+passport.deserializeUser(async (user, done) => {
+  try {
+    User.findById(user.id).then((user) => {
+      done(null, user);
+    });
+  } catch (error) {
+    return console.error(error);
+  }
 });
 
 passport.use(
@@ -43,35 +47,35 @@ passport.use(
     //call back function in order which in this case it is called "done" sort of like the "next" call back function for middleware.
     //The "done" call back function is refering to the "passport.serializeUser(...)" & "passport.deserializeUser(...)"  in the lines above.
     //So the values passed here those two functions inherit.
-    async (accessToken, refreshToken, profile, done) => {
-    
-      //console.log(profile)
-      const newUser = new User({
-        user: profile.username.trim(),
-        gitid: profile.id,
-        online: true,
-        access_token: accessToken,
-        refresh_token: refreshToken,
-      });
-      
-      await User.findOne({ gitid: profile.id }).then((user) => {
-        if (!user) {
-          const user = User.create(newUser);
-          let temp = {};
-          temp.accessToken = accessToken;
-          temp.refreshToken = refreshToken;
-          temp.username = user.user;
-          temp.id = user._id;
-         return done(null, temp);
-        } else {
-          let temp = {};
-          temp.accessToken = accessToken;
-          temp.refreshToken = refreshToken;
-          temp.username = user.user;
-          temp.id = user._id;
-          return done(null, temp);
-        }
-      });
+    async (accessToken, refreshToken, profile, cb) => {
+      try {
+        await User.findOrCreate({ githubId: profile.id }, (err, user) =>
+          cb(err, { user, accessToken, refreshToken })
+        );
+      } catch (error) {
+        return console.error(error);
+      }
     }
+
+    // async (accessToken, refreshToken, profile, done) => {
+    //   try {
+    //     //console.log(profile)
+    //     user = await User.findOne({ gitid: profile.id });
+    //     if (!user) {
+    //       const newUser = new User({
+    //         user: profile.username.trim(),
+    //         gitid: profile.id,
+    //         online: true,
+    //       });
+
+    //       user = await User.create(newUser);
+    //       return done(null, { user, accessToken, refreshToken });
+    //     }
+
+    //     return done(null, { user, accessToken, refreshToken });
+    //   } catch (error) {
+    //     return console.error(error);
+    //   }
+    // }
   )
 );
