@@ -1,20 +1,32 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Home from "../Home/Home";
 import Login from "../Login/Login";
-
-function index() {
+import Navbar from "../Navbar/Navbar";
+import {apiRoot} from "../../config";
+function AppRouter() {
   return (
     <Router>
-    <Switch>
-      <Route exact path="/">
+      <Navbar />
+      <Switch>
+        <Route exact path="/">
           <Home />
-      </Route>
-      <Route path="/login">
+        </Route>
+        <Route path="/login">
           <Login />
-      </Route>
-    </Switch>
-  </Router>
+        </Route>
+        <Route
+          exact
+          path="/auth/github"
+          component={() => {
+            window.location.href = `${apiRoot}/auth/github`;
+            return null;
+          }}
+        />
+      </Switch>
+    </Router>
   );
 }
-export default index;
+export default AppRouter;
+
+

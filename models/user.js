@@ -1,31 +1,27 @@
-const mongoose = require('mongoose'),
-UserSchema = mongoose.Schema(
-    {
-        user: {
-            type: String,
-            required:true,
-            unique: true
-        },
-        online: {
-            type: Boolean,
-            default: false
-        },
-        access_token: {
-            type: String
-        },
-        refresh_token: {
-            type: String
-        },
-        gitid: {
-            type: Number,
-            unique: true
-        },
-        registerDate: {
-            type: Date,
-            date: Date.now
-        }
+const mongoose = require("mongoose"),
+  UserSchema = mongoose.Schema({
+    avatar: {
+      type: String,
+      required: true,
+    },
 
-    }
-)
+    user: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    online: {
+      type: Boolean,
+      default: false,
+    },
+    gitid: {
+      type: Number,
+      unique: true,
+    },
+    registerDate: {
+      type: Date,
+      default: Date.now,
+    },
+  });
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model("User", UserSchema);

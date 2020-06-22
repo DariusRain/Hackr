@@ -7,9 +7,6 @@ import {createLogger } from "redux-logger";
 import {default as reduxThunk} from "redux-thunk";
 import login from "./modules/login"
 
-// Imported Reducers to be combined
-import resourceReducer from "./modules/resource";
-
 const loggerMiddleware = createLogger();
 
 const createStoreWithMiddleware = applyMiddleware(

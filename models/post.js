@@ -2,21 +2,17 @@
 const mongoose = require('mongoose'),
 PostSchema = new mongoose.Schema(
     {
-        avatar: {
-            type: String,
-            required: true
-        },
 
         user: {
-
-            type: String,
+            type: mongoose.SchemaTypes.ObjectId,
             required: true
         },
+
         postDate: {
             type: Date,
-            date: Date.now
-
+            default: Date.now
         },
+        
         post: {
             type: String,
             tags: ['posts'],
@@ -24,10 +20,12 @@ PostSchema = new mongoose.Schema(
             minlength: 3,
             maxLength: 3000
         },
+        
         thumbups: {
             type: Array,
             tags: ['thumbups'] 
         },
+        
         thumbdowns: {
             type: Array,
             tags: ['thumbdowns']
