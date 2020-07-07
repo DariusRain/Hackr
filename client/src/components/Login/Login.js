@@ -15,14 +15,6 @@ export const Login = () => {
           alt="Github-Icon"
           src="https://cdn.iconscout.com/icon/free/png-256/github-1693585-1442626.png"
         ></img>
-
-        <p
-          className={
-            "theme-white-text hover-text-green cursor-pointer medium-font"
-          }
-        >
-          {"Login/Register"}
-        </p>
       </Card>
     </Link>
   );

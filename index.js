@@ -1,17 +1,18 @@
 //index.js (Manin Server File)
 
-
 // Imports
 const express = require("express"),
   mongoose = require("mongoose"),
   cors = require("cors"),
-  path = require('path'),
-  auth = require('./routes/auth'),
-  passport = require('passport'),
-  cookieSession = require('cookie-session'),
-  passportSetup = require('./config/passport-setup');
-  // volleyball = require('volleyball');
+  path = require("path"),
+  auth = require("./routes/auth"),
+  passport = require("passport"),
+  cookieSession = require("cookie-session");
 
+  const {dbUri} = require("./config");
+  // { passportSetup } = require("./config");
+  // passportSetup()
+// volleyball = require('volleyball');
 
 // Express Application @server
 const server = express();
@@ -19,54 +20,48 @@ const home = require("./routes/home");
 const user = require("./routes/user");
 
 // Set Pug View Engine
-server.set('views', path.join(__dirname, 'views'))
-server.set('view engine', 'pug');
+server.set("views", path.join(__dirname, "views"));
+server.set("view engine", "pug");
 server.use(express.static("public"));
 
 // Cors package & volleyball - to see requests in the console.
-server.use(cors())
+server.use(cors());
 // server.use(volleyball)
 
 //  Stores a cookie as a session for a day
-server.use(cookieSession({
-  maxAge: 24 * 60 * 60 * 10000,
-  keys: [process.env.COOKIE_KEY]
-}))
-
+server.use(
+  cookieSession({
+    maxAge: 24 * 60 * 60 * 10000,
+    keys: [process.env.COOKIE_KEY],
+  })
+);
 
 //Initialize passport & Allow session cookies
-server.use(passport.initialize())
-server.use(passport.session())
-
-
+server.use(passport.initialize());
+server.use(passport.session());
 
 // Routes & Middlewares
 server.use(express.json());
-server.use(express.urlencoded({extended: false}))
-
+server.use(express.urlencoded({ extended: false }));
 
 server.use("/", home);
 server.use("/user", user);
-server.use('/auth', auth)
-
-
+server.use("/auth", auth);
 
 // Render 404 by default if none of the routes & middlewares above recognize the request.
 server.use("/", (req, res, next) => {
-  res.render('errors', {  data: { message: "404 Not found" } });
-})
+  res.render("errors", { data: { message: "404 Not found" } });
+});
 mongoose.connect(
-  process.env.DB,
+  dbUri,
   { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },
   () => {
-    console.log(`Connected. to ${process.env.DB}`);
+    console.log(`Connected. to ${dbUri}`);
   }
-);
-
-
+)
 // Set server to listen on port
-const port = process.env.PORT;
 
+const port = process.env.PORT || 5000;
 
 server.listen(port, () => {
   console.log(`Listening on ${port}`);
