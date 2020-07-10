@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Card from "../common/Card";
 export const Login = () => {
   return (
-    <Link className={"no-decoration center-element "} to="/hackr/auth/github">
+    <Link className={"no-decoration center-element "} to="/auth/github">
       <Card
         classNames={
           "center-element width-50 theme-grey-background center-text cursor-pointer"
