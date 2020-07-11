@@ -24,7 +24,7 @@ function AppRouter() {
           }}
         />
         <Route path="/auth/github/callback" >
-          <div>ll</div>
+          {/* <User /> */}
         </Route>
       </Switch>
     </Router>
